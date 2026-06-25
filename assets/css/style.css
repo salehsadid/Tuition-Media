@@ -1,0 +1,257 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600;700;800&display=swap');
+
+:root {
+    --primary-color: #2563EB;
+    --primary-hover: #1D4ED8;
+    --secondary-color: #1E293B;
+    --accent-color: #38BDF8;
+    --bg-color: #F8FAFC;
+    --success-color: #22C55E;
+    --text-main: #334155;
+    --text-muted: #64748B;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: 'Poppins', sans-serif;
+    color: var(--secondary-color);
+}
+
+/* Typography Enhancements */
+.text-primary-custom { color: var(--primary-color) !important; }
+.text-secondary-custom { color: var(--secondary-color) !important; }
+.bg-primary-custom { background-color: var(--primary-color) !important; color: white; }
+.bg-secondary-custom { background-color: var(--secondary-color) !important; color: white; }
+
+/* Buttons */
+.btn-primary-custom {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btn-outline-custom {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    font-weight: 500;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-custom:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.navbar-custom .nav-link {
+    color: var(--text-main);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.navbar-custom .nav-link:hover {
+    color: var(--primary-color);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--primary-color) !important;
+}
+
+/* Cards & Shadows */
+.card-custom {
+    background: white;
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, var(--bg-color) 0%, #e0e7ff 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+/* Feature Icons */
+.feature-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 1rem;
+    background-color: #e0e7ff;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Authentication Pages (Login/Register) */
+.auth-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 100%);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.auth-card.register-card {
+    max-width: 800px;
+}
+
+.auth-header {
+    padding: 2rem 2rem 1rem;
+    text-align: center;
+}
+
+.auth-body {
+    padding: 1rem 2rem 2rem;
+}
+
+/* Custom Nav Pills for Role Selection */
+.nav-pills-custom .nav-link {
+    color: var(--text-muted);
+    border-radius: 0.5rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s;
+}
+
+.nav-pills-custom .nav-link.active {
+    background-color: #e0e7ff;
+    color: var(--primary-color);
+}
+
+/* Input Groups */
+.input-group-custom {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.input-group-custom .input-group-text {
+    background-color: white;
+    border-right: none;
+    color: var(--text-muted);
+}
+
+.input-group-custom .form-control {
+    border-left: none;
+}
+
+.input-group-custom .form-control:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+}
+
+/* Password Strength & Match UI */
+.password-strength-meter {
+    height: 4px;
+    background-color: #e2e8f0;
+    border-radius: 2px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: all 0.3s ease;
+}
+
+.strength-weak { background-color: #ef4444; width: 33%; }
+.strength-medium { background-color: #f59e0b; width: 66%; }
+.strength-strong { background-color: var(--success-color); width: 100%; }
+
+/* Form Field Animations */
+.dynamic-field-group {
+    display: none;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.dynamic-field-group.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Footer */
+.footer-custom {
+    background-color: var(--secondary-color);
+    color: #cbd5e1;
+    padding: 4rem 0 2rem;
+    margin-top: auto;
+}
+
+.footer-custom a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-custom a:hover {
+    color: white;
+}
