@@ -30,7 +30,7 @@
         
         <!-- Contact Information -->
         <div class="col-lg-4">
-            <div class="card card-custom border-0 p-4 h-100">
+            <div class="card card-custom p-4 h-100">
                 <h4 class="fw-bold mb-4">Contact Information</h4>
                 
                 <div class="d-flex align-items-start mb-4">
@@ -67,7 +67,7 @@
 
         <!-- Contact Form -->
         <div class="col-lg-6">
-            <div class="card card-custom border-0 p-4 p-md-5">
+            <div class="card card-custom p-4 p-md-5">
                 <h4 class="fw-bold mb-4">Send us a message</h4>
                 <form action="#" method="GET">
                     <div class="row g-3">
@@ -92,7 +92,7 @@
                             <textarea class="form-control fs-6" rows="5" placeholder="Write your message here..." required></textarea>
                         </div>
                         <div class="col-12 mt-4">
-                            <button type="submit" class="btn btn-primary-custom w-100 btn-lg fs-6">
+                            <button type="submit" class="btn btn-brand w-100 btn-lg fs-6">
                                 Send Message <i class="bi bi-send ms-2"></i>
                             </button>
                         </div>

@@ -88,7 +88,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary-custom w-100 btn-lg fs-6 mb-4">
+                <button type="submit" class="btn btn-brand w-100 btn-lg fs-6 mb-4">
                     Sign In <i class="bi bi-box-arrow-in-right ms-2"></i>
                 </button>
 

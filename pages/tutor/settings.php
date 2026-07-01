@@ -27,7 +27,7 @@
             <div class="row g-4">
                 <div class="col-lg-8">
                     <!-- Update Info Form -->
-                    <div class="card card-custom border-0 p-4 mb-4">
+                    <div class="card card-custom p-4 mb-4">
                         <h5 class="fw-bold mb-4 border-bottom pb-3">Professional Information</h5>
                         <form action="profile.php" method="GET">
                             <div class="row g-3">
@@ -56,14 +56,14 @@
                                     <input type="number" class="form-control bg-light border-0" value="5000">
                                 </div>
                                 <div class="col-12 mt-4 text-end">
-                                    <button type="submit" class="btn btn-primary-custom px-4">Save Changes</button>
+                                    <button type="submit" class="btn btn-brand px-4">Save Changes</button>
                                 </div>
                             </div>
                         </form>
                     </div>
 
                     <!-- Change Password Form -->
-                    <div class="card card-custom border-0 p-4">
+                    <div class="card card-custom p-4">
                         <h5 class="fw-bold mb-4 border-bottom pb-3 text-danger">Change Password</h5>
                         <form action="#" method="GET">
                             <div class="row g-3">
@@ -89,13 +89,13 @@
 
                 <!-- Document Verification -->
                 <div class="col-lg-4">
-                    <div class="card card-custom border-0 p-4 mb-4 bg-primary bg-opacity-10">
+                    <div class="card card-custom p-4 mb-4 bg-primary bg-opacity-10">
                         <h6 class="fw-bold text-primary-custom mb-3"><i class="bi bi-shield-check me-2"></i>Verification Status</h6>
                         <p class="small text-muted mb-3">Your student ID and documents have been verified by the admin team.</p>
                         <div class="badge bg-primary px-3 py-2 fs-6">Verified Tutor <i class="bi bi-patch-check-fill ms-1"></i></div>
                     </div>
                     
-                    <div class="card card-custom border-0 border-top border-4 border-danger p-4">
+                    <div class="card card-custom border-top border-4 border-danger p-4">
                         <h6 class="fw-bold text-danger mb-3"><i class="bi bi-exclamation-triangle-fill me-2"></i>Danger Zone</h6>
                         <p class="small text-muted mb-4">Once you delete your account, there is no going back. Please be certain.</p>
                         <button class="btn btn-outline-danger w-100 fw-bold">Delete Account</button>

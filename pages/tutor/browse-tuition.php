@@ -25,7 +25,7 @@
             <h3 class="fw-bold mb-4">Browse Tuition Jobs</h3>
 
             <!-- Search & Filters -->
-            <div class="card card-custom border-0 p-3 mb-4">
+            <div class="card card-custom p-3 mb-4">
                 <form action="#" method="GET">
                     <div class="row g-3">
                         <div class="col-md-4">
@@ -50,7 +50,7 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary-custom w-100">Filter</button>
+                            <button type="submit" class="btn btn-brand w-100">Filter</button>
                         </div>
                     </div>
                 </form>
@@ -61,7 +61,7 @@
                 
                 <!-- Job Card 1 -->
                 <div class="col-lg-6 col-xl-4">
-                    <div class="card card-custom border-0 h-100 p-4 job-card">
+                    <div class="card card-custom h-100 p-4 job-card">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
                                 <h5 class="fw-bold text-primary-custom mb-1">Mathematics</h5>
@@ -91,7 +91,7 @@
 
                 <!-- Job Card 2 -->
                 <div class="col-lg-6 col-xl-4">
-                    <div class="card card-custom border-0 h-100 p-4 job-card">
+                    <div class="card card-custom h-100 p-4 job-card">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
                                 <h5 class="fw-bold text-primary-custom mb-1">Physics & Chemistry</h5>
@@ -121,7 +121,7 @@
 
                 <!-- Job Card 3 -->
                 <div class="col-lg-6 col-xl-4">
-                    <div class="card card-custom border-0 h-100 p-4 job-card">
+                    <div class="card card-custom h-100 p-4 job-card">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
                                 <h5 class="fw-bold text-primary-custom mb-1">English Spoken</h5>

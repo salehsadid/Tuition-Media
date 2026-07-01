@@ -28,7 +28,7 @@
                 <button class="btn btn-sm btn-outline-secondary">Mark all as read</button>
             </div>
 
-            <div class="card card-custom border-0 shadow-sm overflow-hidden">
+            <div class="card card-custom shadow-sm overflow-hidden">
                 <div class="list-group list-group-flush">
                     
                     <!-- Unread Notification -->

@@ -23,21 +23,21 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-5 mb-lg-0 text-center text-lg-start">
-                <span class="badge bg-primary bg-opacity-10 text-primary-custom px-3 py-2 rounded-pill mb-3 fw-bold">
-                    🚀 #1 Tuition Platform in BD
+                <span style="display:inline-flex; align-items:center; gap:0.5rem; background:var(--p-100); color:var(--p-600); font-size:0.8rem; font-weight:600; letter-spacing:0.04em; padding:0.35rem 0.875rem; border-radius:99px; margin-bottom:1.25rem; border:1px solid rgba(92,92,153,0.2);">
+                    #1 Tuition Platform in Bangladesh
                 </span>
-                <h1 class="hero-title text-secondary-custom">
-                    Find the Perfect <span class="text-primary-custom">Tutor</span><br> for Your Future.
+                <h1 class="hero-title">
+                    Find the Perfect <span style="color:var(--p-500);">Tutor</span><br>for Your Future.
                 </h1>
                 <p class="hero-subtitle">
                     Connect with thousands of verified, expert tutors across Bangladesh. 
                     Whether it's for school, college, or university preparation, we have the right match for you.
                 </p>
                 <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
-                    <a href="/pages/register.php" class="btn btn-primary-custom btn-lg shadow-sm">
+                    <a href="/pages/register.php" class="btn btn-brand btn-lg shadow-sm">
                         <i class="bi bi-search me-2"></i>Find a Tutor
                     </a>
-                    <a href="/pages/register.php" class="btn btn-outline-custom btn-lg bg-white">
+                    <a href="/pages/register.php" class="btn btn-brand-outline btn-lg bg-white">
                         <i class="bi bi-person-workspace me-2"></i>Become a Tutor
                     </a>
                 </div>

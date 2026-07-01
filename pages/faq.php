@@ -100,7 +100,7 @@
             <div class="text-center mt-5 p-4 bg-light rounded">
                 <h5 class="fw-bold mb-2">Still have questions?</h5>
                 <p class="text-muted mb-3">Can't find the answer you're looking for? Please chat to our friendly team.</p>
-                <a href="/pages/contact.php" class="btn btn-primary-custom">Get in touch</a>
+                <a href="/pages/contact.php" class="btn btn-brand">Get in touch</a>
             </div>
 
         </div>

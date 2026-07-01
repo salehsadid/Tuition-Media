@@ -26,7 +26,7 @@
             <div class="row">
                 <div class="col-lg-8 mx-auto">
                     
-                    <div class="card card-custom border-0 overflow-hidden mb-4">
+                    <div class="card card-custom overflow-hidden mb-4">
                         <!-- Cover Photo -->
                         <div class="bg-primary bg-opacity-25" style="height: 150px;"></div>
                         

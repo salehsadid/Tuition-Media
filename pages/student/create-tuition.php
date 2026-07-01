@@ -24,7 +24,7 @@
         <div class="dashboard-content">
             <h3 class="fw-bold mb-4">Post a New Tuition Job</h3>
 
-            <div class="card card-custom border-0 p-4 p-md-5">
+            <div class="card card-custom p-4 p-md-5">
                 <form action="my-posts.php" method="GET">
                     
                     <div class="row g-4">
@@ -100,7 +100,7 @@
 
                     <div class="d-flex justify-content-end gap-3">
                         <button type="reset" class="btn btn-outline-secondary px-4 fw-bold">Clear Form</button>
-                        <button type="submit" class="btn btn-primary-custom px-5">
+                        <button type="submit" class="btn btn-brand px-5">
                             Post Job <i class="bi bi-send ms-2"></i>
                         </button>
                     </div>

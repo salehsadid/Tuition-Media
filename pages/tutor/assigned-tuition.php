@@ -28,7 +28,7 @@
             <div class="row g-4">
                 
                 <div class="col-md-6 col-lg-4">
-                    <div class="card card-custom border-0 h-100 p-0 overflow-hidden">
+                    <div class="card card-custom h-100 p-0 overflow-hidden">
                         <div class="bg-success text-white text-center py-4">
                             <h5 class="fw-bold mb-1">Physics - HSC</h5>
                             <small class="text-white-50"><i class="bi bi-geo-alt-fill me-1"></i>Mirpur-10, Dhaka</small>
@@ -56,7 +56,7 @@
                             </div>
                             
                             <div class="d-grid gap-2">
-                                <a href="messages.php" class="btn btn-outline-custom"><i class="bi bi-chat-dots me-2"></i>Message Student</a>
+                                <a href="messages.php" class="btn btn-brand-outline"><i class="bi bi-chat-dots me-2"></i>Message Student</a>
                             </div>
                         </div>
                     </div>

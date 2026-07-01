@@ -24,7 +24,7 @@
         <div class="dashboard-content">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold mb-0">My Tuition Posts</h3>
-                <a href="create-tuition.php" class="btn btn-primary-custom btn-sm">
+                <a href="create-tuition.php" class="btn btn-brand btn-sm">
                     <i class="bi bi-plus me-1"></i>New Post
                 </a>
             </div>
@@ -54,7 +54,7 @@
                                 <span class="badge bg-primary rounded-pill px-3">12</span>
                             </td>
                             <td>
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">Open</span>
+                                <span class="badge-success">Open</span>
                             </td>
                             <td class="text-end">
                                 <a href="applications.php" class="btn btn-sm btn-outline-primary me-2"><i class="bi bi-eye"></i> View</a>
@@ -72,7 +72,7 @@
                                 <span class="badge bg-secondary rounded-pill px-3">0</span>
                             </td>
                             <td>
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">Open</span>
+                                <span class="badge-success">Open</span>
                             </td>
                             <td class="text-end">
                                 <a href="#" class="btn btn-sm btn-outline-primary me-2"><i class="bi bi-pencil"></i> Edit</a>
@@ -90,7 +90,7 @@
                                 <span class="badge bg-secondary rounded-pill px-3">5</span>
                             </td>
                             <td>
-                                <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-2 py-1">Assigned</span>
+                                <span class="badge-warning">Assigned</span>
                             </td>
                             <td class="text-end">
                                 <a href="assigned-tutors.php" class="btn btn-sm btn-primary-custom me-2"><i class="bi bi-person-check"></i> Tutor</a>
@@ -107,7 +107,7 @@
                                 <span class="badge bg-secondary rounded-pill px-3">8</span>
                             </td>
                             <td>
-                                <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-2 py-1">Closed</span>
+                                <span class="badge-neutral">Closed</span>
                             </td>
                             <td class="text-end">
                                 <button class="btn btn-sm btn-outline-secondary" disabled><i class="bi bi-eye"></i> View</button>

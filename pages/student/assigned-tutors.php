@@ -28,7 +28,7 @@
             <div class="row g-4">
                 
                 <div class="col-md-6 col-lg-4">
-                    <div class="card card-custom border-0 h-100 p-0 overflow-hidden">
+                    <div class="card card-custom h-100 p-0 overflow-hidden">
                         <div class="bg-primary text-white text-center py-4">
                             <img src="https://ui-avatars.com/api/?name=Kamrul+Islam&background=fff&color=2563EB" class="rounded-circle shadow-sm border border-3 border-white mb-2" width="80" height="80">
                             <h5 class="fw-bold mb-0">Kamrul Islam</h5>
@@ -50,7 +50,7 @@
                             </div>
                             
                             <div class="d-grid gap-2">
-                                <a href="messages.php" class="btn btn-primary-custom"><i class="bi bi-chat-dots me-2"></i>Message Tutor</a>
+                                <a href="messages.php" class="btn btn-brand"><i class="bi bi-chat-dots me-2"></i>Message Tutor</a>
                                 <button class="btn btn-outline-danger"><i class="bi bi-x-circle me-2"></i>End Contract</button>
                             </div>
                         </div>

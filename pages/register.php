@@ -190,7 +190,7 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary-custom w-100 fs-6 mb-4">
+                        <button type="submit" class="btn btn-brand w-100 fs-6 mb-4">
                             Create Account <i class="bi bi-person-plus ms-2"></i>
                         </button>
 

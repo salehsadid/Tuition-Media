@@ -47,7 +47,7 @@
                             </td>
                             <td>October 15, 2023</td>
                             <td>
-                                <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-2 py-1">Pending</span>
+                                <span class="badge-warning">Pending</span>
                             </td>
                             <td class="text-end">
                                 <a href="tuition-details.php" class="btn btn-sm btn-outline-primary" title="View Job"><i class="bi bi-eye"></i></a>
@@ -65,7 +65,7 @@
                             </td>
                             <td>October 10, 2023</td>
                             <td>
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">Accepted</span>
+                                <span class="badge-success">Accepted</span>
                             </td>
                             <td class="text-end">
                                 <a href="assigned-tuition.php" class="btn btn-sm btn-primary-custom fw-bold">Go to Job</a>
@@ -82,7 +82,7 @@
                             </td>
                             <td>September 28, 2023</td>
                             <td>
-                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1">Rejected</span>
+                                <span class="badge-danger">Rejected</span>
                             </td>
                             <td class="text-end">
                                 <button class="btn btn-sm btn-outline-secondary" disabled><i class="bi bi-eye"></i></button>

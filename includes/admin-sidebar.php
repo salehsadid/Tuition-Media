@@ -9,7 +9,7 @@
     </div>
     <div class="offcanvas-body flex-column p-0 d-flex" style="background:var(--gray-900);">
         <div class="px-3 pt-3 pb-1">
-            <span style="display:block; font-size:0.6875rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.3); padding:0 0.5rem 0.25rem;">Tutor Panel</span>
+            <span style="display:inline-block; background:rgba(220,38,38,0.2); color:#fca5a5; font-size:0.6875rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:0.25rem 0.625rem; border-radius:4px; margin:0 0.5rem;">Admin</span>
         </div>
         <ul class="sidebar-menu w-100">
             <span class="sidebar-section-label">Overview</span>
@@ -19,28 +19,25 @@
                 </a>
             </li>
 
-            <span class="sidebar-section-label">Job Management</span>
+            <span class="sidebar-section-label">User Management</span>
             <li>
-                <a href="browse-tuition.php" class="sidebar-link <?= ($current_page=='browse-tuition.php'||$current_page=='tuition-details.php') ? 'active' : '' ?>">
-                    <i class="bi bi-search"></i> Browse Tuition
-                </a>
-            </li>
-            <li>
-                <a href="applied-jobs.php" class="sidebar-link <?= $current_page=='applied-jobs.php' ? 'active' : '' ?>">
-                    <i class="bi bi-briefcase"></i> Applied Jobs
-                </a>
-            </li>
-            <li>
-                <a href="assigned-tuition.php" class="sidebar-link <?= $current_page=='assigned-tuition.php' ? 'active' : '' ?>">
-                    <i class="bi bi-person-workspace"></i> Assigned Tuition
+                <a href="manage-users.php" class="sidebar-link <?= $current_page=='manage-users.php' ? 'active' : '' ?>">
+                    <i class="bi bi-people"></i> Manage Users
                 </a>
             </li>
 
-            <span class="sidebar-section-label">Communication</span>
+            <span class="sidebar-section-label">Content</span>
+            <li>
+                <a href="manage-posts.php" class="sidebar-link <?= $current_page=='manage-posts.php' ? 'active' : '' ?>">
+                    <i class="bi bi-card-list"></i> Manage Posts
+                </a>
+            </li>
+
+            <span class="sidebar-section-label">System</span>
             <li>
                 <a href="notifications.php" class="sidebar-link <?= $current_page=='notifications.php' ? 'active' : '' ?>">
                     <i class="bi bi-bell"></i> Notifications
-                    <span class="badge bg-danger ms-auto">1</span>
+                    <span class="badge bg-danger ms-auto">3</span>
                 </a>
             </li>
 

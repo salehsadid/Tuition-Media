@@ -28,7 +28,7 @@
 
             <div class="row g-4">
                 <div class="col-lg-8">
-                    <div class="card card-custom border-0 p-4 p-md-5 mb-4">
+                    <div class="card card-custom p-4 p-md-5 mb-4">
                         <div class="d-flex justify-content-between align-items-start mb-4 border-bottom pb-4">
                             <div>
                                 <h2 class="fw-bold text-primary-custom mb-2">Mathematics Tutor Needed</h2>
@@ -89,7 +89,7 @@
 
                 <!-- Right Sidebar / Action Card -->
                 <div class="col-lg-4">
-                    <div class="card card-custom border-0 p-4 sticky-top" style="top: calc(var(--navbar-height) + 2rem);">
+                    <div class="card card-custom p-4 sticky-top" style="top: calc(var(--navbar-height) + 2rem);">
                         <div class="text-center mb-4">
                             <img src="https://ui-avatars.com/api/?name=Syed+Ahmed&background=random" class="rounded-circle shadow-sm mb-3" width="80" height="80">
                             <h5 class="fw-bold mb-0">Syed Ahmed</h5>
@@ -107,7 +107,7 @@
                                 <label class="form-label fw-bold text-secondary-custom small">Why are you a good fit? (Optional)</label>
                                 <textarea class="form-control bg-light border-0" rows="3" placeholder="Write a short cover note..."></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary-custom w-100 fw-bold fs-5 py-2">
+                            <button type="submit" class="btn btn-brand w-100 fw-bold fs-5 py-2">
                                 Apply Now <i class="bi bi-send ms-2"></i>
                             </button>
                         </form>

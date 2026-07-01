@@ -25,7 +25,7 @@
             <h3 class="fw-bold mb-4">Application History</h3>
 
             <!-- Filters -->
-            <div class="card card-custom border-0 p-3 mb-4">
+            <div class="card card-custom p-3 mb-4">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-4">
                         <select class="form-select border-0 bg-light">
@@ -77,7 +77,7 @@
                                 <div class="small text-muted">3 years exp.</div>
                             </td>
                             <td>
-                                <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-2 py-1">Pending</span>
+                                <span class="badge-warning">Pending</span>
                             </td>
                             <td class="text-end">
                                 <button class="btn btn-sm btn-success me-1" title="Accept"><i class="bi bi-check-lg"></i></button>
@@ -104,7 +104,7 @@
                                 <div class="small text-muted">1 year exp.</div>
                             </td>
                             <td>
-                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1">Rejected</span>
+                                <span class="badge-danger">Rejected</span>
                             </td>
                             <td class="text-end">
                                 <button class="btn btn-sm btn-outline-primary" title="View Profile"><i class="bi bi-person"></i></button>
@@ -129,7 +129,7 @@
                                 <div class="small text-muted">5 years exp.</div>
                             </td>
                             <td>
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">Accepted</span>
+                                <span class="badge-success">Accepted</span>
                             </td>
                             <td class="text-end">
                                 <a href="assigned-tutors.php" class="btn btn-sm btn-primary-custom"><i class="bi bi-chat"></i> Contact</a>

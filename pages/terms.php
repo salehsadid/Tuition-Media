@@ -20,7 +20,7 @@
 <main class="container py-5 my-4 flex-grow-1">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card card-custom border-0 p-4 p-md-5">
+            <div class="card card-custom p-4 p-md-5">
                 <div class="mb-5 text-center">
                     <h1 class="fw-bold mb-3">Terms & Conditions</h1>
                     <p class="text-muted">Please read these terms carefully before using our platform.</p>
