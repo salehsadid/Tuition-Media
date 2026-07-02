@@ -12,7 +12,7 @@
                     <i class="bi bi-mortarboard-fill me-2 fs-3 text-accent"></i>
                     <span style="color: white !important;">SmartTutor</span>
                 </a>
-                <p class="small text-muted pe-md-5">
+                <p class="small pe-md-5" style="color: var(--p-100); opacity: 0.9;">
                     The most trusted platform connecting talented tutors with students across Bangladesh. Learn smarter, grow faster.
                 </p>
             </div>
@@ -58,7 +58,7 @@
 
         <hr class="mt-5 mb-4 border-secondary">
         
-        <div class="text-center small text-muted">
+        <div class="text-center small" style="color: var(--p-300);">
             &copy; <?= date('Y') ?> SmartTutor. All rights reserved. Designed for Database Systems Lab.
         </div>
     </div>
