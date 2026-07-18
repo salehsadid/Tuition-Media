@@ -34,7 +34,7 @@
                     <!-- Unread Notification -->
                     <a href="applications.php" class="list-group-item list-group-item-action p-4 bg-primary bg-opacity-10 border-bottom">
                         <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-                            <h6 class="mb-1 fw-bold text-primary-custom"><i class="bi bi-person-plus-fill me-2"></i>New Application Received</h6>
+                            <h6 class="mb-1 fw-bold text-primary-custom">New Application Received</h6>
                             <small class="text-primary-custom fw-bold">10 mins ago</small>
                         </div>
                         <p class="mb-1 text-dark small">Rakib Hasan applied for your post "Mathematics for Class 10".</p>
@@ -69,3 +69,4 @@
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
+

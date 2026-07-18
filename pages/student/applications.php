@@ -80,9 +80,9 @@
                                 <span class="badge-warning">Pending</span>
                             </td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-success me-1" title="Accept"><i class="bi bi-check-lg"></i></button>
-                                <button class="btn btn-sm btn-danger me-1" title="Reject"><i class="bi bi-x-lg"></i></button>
-                                <button class="btn btn-sm btn-outline-primary" title="View Profile"><i class="bi bi-person"></i></button>
+                                <button class="btn btn-sm btn-success me-1" title="Accept">Accept</button>
+                                <button class="btn btn-sm btn-danger me-1" title="Reject">Reject</button>
+                                <button class="btn btn-sm btn-outline-primary" title="View Profile">View Profile</button>
                             </td>
                         </tr>
                         <tr>
@@ -107,7 +107,7 @@
                                 <span class="badge-danger">Rejected</span>
                             </td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-primary" title="View Profile"><i class="bi bi-person"></i></button>
+                                <button class="btn btn-sm btn-outline-primary" title="View Profile">View Profile</button>
                             </td>
                         </tr>
                         <tr>
@@ -132,7 +132,7 @@
                                 <span class="badge-success">Accepted</span>
                             </td>
                             <td class="text-end">
-                                <a href="assigned-tutors.php" class="btn btn-sm btn-primary-custom"><i class="bi bi-chat"></i> Contact</a>
+                                <a href="assigned-tutors.php" class="btn btn-sm btn-primary-custom">Contact</a>
                             </td>
                         </tr>
                     </tbody>
@@ -147,3 +147,5 @@
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
+
+

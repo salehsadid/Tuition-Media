@@ -75,7 +75,7 @@
                                 <div class="d-flex align-items-center">
                                     <img src="https://ui-avatars.com/api/?name=John+Doe&background=e2e8f0&color=334155" class="rounded-circle me-3" width="38" height="38">
                                     <div>
-                                        <div class="fw-semibold">John Doe</div>
+                                        <div class="fw-semibold">Saleh Sadid Mir</div>
                                         <div class="text-muted small">johndoe@example.com</div>
                                     </div>
                                 </div>
@@ -85,8 +85,8 @@
                             <td class="text-muted small">Oct 5, 2023</td>
                             <td><span class="badge-success">Active</span></td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Details"><i class="bi bi-eye"></i></button>
-                                <button class="btn btn-sm btn-outline-danger" title="Block User"><i class="bi bi-slash-circle"></i></button>
+                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Details">View Details</button>
+                                <button class="btn btn-sm btn-outline-danger" title="Block User">Block User</button>
                             </td>
                         </tr>
                         <tr>
@@ -104,8 +104,8 @@
                             <td class="text-muted small">Sep 20, 2023</td>
                             <td><span class="badge-success">Verified</span></td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Details"><i class="bi bi-eye"></i></button>
-                                <button class="btn btn-sm btn-outline-danger" title="Block User"><i class="bi bi-slash-circle"></i></button>
+                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Details">View Details</button>
+                                <button class="btn btn-sm btn-outline-danger" title="Block User">Block User</button>
                             </td>
                         </tr>
                         <tr>
@@ -123,8 +123,8 @@
                             <td class="text-muted small">Oct 14, 2023</td>
                             <td><span class="badge-warning">Pending</span></td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-success me-1" title="Verify Tutor"><i class="bi bi-patch-check"></i> Verify</button>
-                                <button class="btn btn-sm btn-outline-danger" title="Reject"><i class="bi bi-x-circle"></i></button>
+                                <button class="btn btn-sm btn-outline-success me-1" title="Verify Tutor">Verify</button>
+                                <button class="btn btn-sm btn-outline-danger" title="Reject">Reject</button>
                             </td>
                         </tr>
                         <tr>
@@ -142,8 +142,8 @@
                             <td class="text-muted small">Oct 15, 2023</td>
                             <td><span class="badge-danger">Blocked</span></td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Details"><i class="bi bi-eye"></i></button>
-                                <button class="btn btn-sm btn-outline-success" title="Unblock User"><i class="bi bi-check-circle"></i> Unblock</button>
+                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Details">View Details</button>
+                                <button class="btn btn-sm btn-outline-success" title="Unblock User">Unblock</button>
                             </td>
                         </tr>
                     </tbody>
@@ -168,3 +168,5 @@
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
+
+

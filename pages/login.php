@@ -13,18 +13,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $db->fetchOne("SELECT * FROM ST_USER WHERE email = :email AND is_active = 1", ['email' => $email]);
 
         if ($user && password_verify($password, $user['password_hash'])) {
-            $_SESSION['user_id'] = $user['user_id'];
-            $_SESSION['role'] = $user['role'];
-
-            // Redirect based on role
-            if ($user['role'] === 'admin') {
-                header("Location: /pages/admin/dashboard.php");
-            } elseif ($user['role'] === 'tutor') {
-                header("Location: /pages/tutor/dashboard.php");
+            $requestedRole = $_POST['role'] ?? 'student';
+            
+            // Enforce role restriction for student and tutor, allow admin unconditionally
+            if ($user['role'] !== 'admin' && $user['role'] !== $requestedRole) {
+                $error = "This is not a " . ucfirst($requestedRole) . " account.";
             } else {
-                header("Location: /pages/student/dashboard.php");
+                $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['role'] = $user['role'];
+    
+                // Redirect based on role
+                if ($user['role'] === 'admin') {
+                    header("Location: admin/dashboard.php");
+                } elseif ($user['role'] === 'tutor') {
+                    header("Location: tutor/dashboard.php");
+                } else {
+                    header("Location: student/dashboard.php");
+                }
+                exit;
             }
-            exit;
         } else {
             $error = 'Invalid email or password.';
         }
@@ -79,7 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <div class="auth-body">
-            <form action="/pages/login.php" method="POST">
+            <form action="login.php" method="POST">
+                <input type="hidden" name="role" id="role-input" value="student">
                 
                 <!-- Email Field -->
                 <div class="mb-4">
@@ -113,23 +121,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             Remember me on this device
                         </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input shadow-none" type="checkbox" id="terms" required>
-                        <label class="form-check-label small text-muted" for="terms">
-                            I agree to the <a href="#" class="text-primary-custom text-decoration-none">Terms</a> & <a href="#" class="text-primary-custom text-decoration-none">Privacy Policy</a>
-                        </label>
-                    </div>
                 </div>
 
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-brand w-100 btn-lg fs-6 mb-4">
-                    Sign In <i class="bi bi-box-arrow-in-right ms-2"></i>
+                    Sign In
                 </button>
 
                 <!-- Footer Links -->
                 <div class="text-center">
-                    <p class="text-muted small mb-2">Don't have an account? <a href="/pages/register.php" class="text-primary-custom fw-bold text-decoration-none">Register Now</a></p>
-                    <a href="/pages/index.php" class="text-muted small text-decoration-none"><i class="bi bi-arrow-left me-1"></i>Back to Home</a>
+                    <p class="text-muted small mb-2">Don't have an account? <a href="register.php" class="text-primary-custom fw-bold text-decoration-none">Register Now</a></p>
+                    <a href="index.php" class="text-muted small text-decoration-none">Back to Home</a>
                 </div>
             </form>
         </div>
@@ -141,3 +143,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="../assets/js/main.js"></script>
 </body>
 </html>
+

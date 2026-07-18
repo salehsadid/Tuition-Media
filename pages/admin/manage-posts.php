@@ -79,7 +79,7 @@
                                 <div class="text-muted small">Class 10 (SSC)</div>
                             </td>
                             <td>
-                                <div class="fw-semibold small">John Doe</div>
+                                <div class="fw-semibold small">Saleh Sadid Mir</div>
                                 <div class="text-muted" style="font-size: 0.75rem;">Student</div>
                             </td>
                             <td class="text-muted small">Dhanmondi</td>
@@ -87,8 +87,8 @@
                             <td><span class="badge bg-secondary bg-opacity-10 text-secondary border px-2">12</span></td>
                             <td><span class="badge-success">Open</span></td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post"><i class="bi bi-eye"></i></button>
-                                <button class="btn btn-sm btn-outline-danger" title="Remove Post"><i class="bi bi-trash"></i></button>
+                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post">View Post</button>
+                                <button class="btn btn-sm btn-outline-danger" title="Remove Post">Remove Post</button>
                             </td>
                         </tr>
                         <tr>
@@ -105,8 +105,8 @@
                             <td><span class="badge bg-secondary bg-opacity-10 text-secondary border px-2">7</span></td>
                             <td><span class="badge-neutral">Assigned</span></td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post"><i class="bi bi-eye"></i></button>
-                                <button class="btn btn-sm btn-outline-danger" title="Remove Post"><i class="bi bi-trash"></i></button>
+                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post">View Post</button>
+                                <button class="btn btn-sm btn-outline-danger" title="Remove Post">Remove Post</button>
                             </td>
                         </tr>
                         <tr>
@@ -123,8 +123,8 @@
                             <td><span class="badge bg-secondary bg-opacity-10 text-secondary border px-2">3</span></td>
                             <td><span class="badge-danger">Closed</span></td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post"><i class="bi bi-eye"></i></button>
-                                <button class="btn btn-sm btn-outline-danger" title="Remove Post"><i class="bi bi-trash"></i></button>
+                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post">View Post</button>
+                                <button class="btn btn-sm btn-outline-danger" title="Remove Post">Remove Post</button>
                             </td>
                         </tr>
                         <tr>
@@ -141,8 +141,8 @@
                             <td><span class="badge bg-secondary bg-opacity-10 text-secondary border px-2">18</span></td>
                             <td><span class="badge-success">Open</span></td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post"><i class="bi bi-eye"></i></button>
-                                <button class="btn btn-sm btn-outline-danger" title="Remove Post"><i class="bi bi-trash"></i></button>
+                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post">View Post</button>
+                                <button class="btn btn-sm btn-outline-danger" title="Remove Post">Remove Post</button>
                             </td>
                         </tr>
                     </tbody>
@@ -166,3 +166,5 @@
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
+
+

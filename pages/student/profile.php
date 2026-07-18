@@ -1,7 +1,21 @@
 <?php
-/**
- * SmartTutor - Profile (Student)
- */
+session_start();
+require_once '../../config/database.php';
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
+    header('Location: ../login.php');
+    exit;
+}
+$db = Database::getInstance();
+$userId = $_SESSION['user_id'];
+
+$student = $db->fetchOne("
+    SELECT u.email, s.* 
+    FROM ST_USER u 
+    JOIN ST_STUDENT s ON u.user_id = s.user_id 
+    WHERE u.user_id = :u_id", ['u_id' => $userId]);
+
+$nameParts = explode(' ', $student['full_name']);
+$initials = strtoupper(substr($nameParts[0], 0, 1) . (isset($nameParts[1]) ? substr($nameParts[1], 0, 1) : ''));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,15 +46,17 @@
                         
                         <div class="card-body px-4 px-md-5 pb-5 position-relative">
                             <!-- Avatar -->
-                            <img src="https://ui-avatars.com/api/?name=John+Doe&background=2563EB&color=fff&size=128" alt="Profile" class="rounded-circle border border-4 border-white shadow-sm position-absolute" style="top: -64px; left: 2rem;">
+                            <div class="rounded-circle border border-4 border-white shadow-sm position-absolute d-flex align-items-center justify-content-center bg-primary text-white fs-1 fw-bold" style="top: -64px; left: 2rem; width: 128px; height: 128px;">
+                                <?= $initials ?>
+                            </div>
                             
                             <!-- Action Button -->
                             <div class="d-flex justify-content-end mb-4">
-                                <a href="settings.php" class="btn btn-outline-primary btn-sm fw-bold"><i class="bi bi-pencil me-1"></i> Edit Profile</a>
+                                <a href="settings.php" class="btn btn-outline-primary btn-sm fw-bold"><i class="bi bi-pencil me-1"></i>Edit Profile</a>
                             </div>
 
-                            <h3 class="fw-bold mb-1 mt-2">John Doe</h3>
-                            <p class="text-muted mb-4"><i class="bi bi-book-half me-2"></i>Class 10 Student at Ideal School & College</p>
+                            <h3 class="fw-bold mb-1 mt-2"><?= htmlspecialchars($student['full_name']) ?></h3>
+                            <p class="text-muted mb-4"><i class="bi bi-book-half me-2"></i>Student</p>
                             
                             <hr class="border-secondary border-opacity-25 mb-4">
 
@@ -52,7 +68,7 @@
                                         <div class="bg-light text-primary-custom rounded p-2 me-3 fs-5"><i class="bi bi-envelope-fill"></i></div>
                                         <div>
                                             <div class="small text-muted fw-bold text-uppercase">Email Address</div>
-                                            <div class="fw-medium">johndoe@example.com</div>
+                                            <div class="fw-medium"><?= htmlspecialchars($student['email']) ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -61,7 +77,7 @@
                                         <div class="bg-light text-success rounded p-2 me-3 fs-5"><i class="bi bi-telephone-fill"></i></div>
                                         <div>
                                             <div class="small text-muted fw-bold text-uppercase">Phone Number</div>
-                                            <div class="fw-medium">+880 1712 345678</div>
+                                            <div class="fw-medium"><?= htmlspecialchars($student['phone'] ?? 'Not provided') ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -70,7 +86,7 @@
                                         <div class="bg-light text-danger rounded p-2 me-3 fs-5"><i class="bi bi-geo-alt-fill"></i></div>
                                         <div>
                                             <div class="small text-muted fw-bold text-uppercase">Current Address</div>
-                                            <div class="fw-medium">Dhanmondi, Dhaka 1205</div>
+                                            <div class="fw-medium"><?= htmlspecialchars($student['address'] ?? 'Not provided') ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -90,3 +106,6 @@
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
+
+
+

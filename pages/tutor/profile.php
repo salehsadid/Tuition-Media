@@ -1,7 +1,21 @@
 <?php
-/**
- * SmartTutor - Profile (Tutor)
- */
+session_start();
+require_once '../../config/database.php';
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'tutor') {
+    header('Location: ../login.php');
+    exit;
+}
+$db = Database::getInstance();
+$userId = $_SESSION['user_id'];
+
+$tutor = $db->fetchOne("
+    SELECT u.email, t.* 
+    FROM ST_USER u 
+    JOIN ST_TUTOR t ON u.user_id = t.user_id 
+    WHERE u.user_id = :u_id", ['u_id' => $userId]);
+
+$nameParts = explode(' ', $tutor['full_name']);
+$initials = strtoupper(substr($nameParts[0], 0, 1) . (isset($nameParts[1]) ? substr($nameParts[1], 0, 1) : ''));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,21 +44,26 @@
                         <div class="bg-primary bg-opacity-25" style="height: 150px;"></div>
                         
                         <div class="card-body px-4 px-md-5 pb-5 position-relative">
-                            <img src="https://ui-avatars.com/api/?name=Kamrul+Islam&background=38BDF8&color=fff&size=128" alt="Profile" class="rounded-circle border border-4 border-white shadow-sm position-absolute" style="top: -64px; left: 2rem;">
+                            <!-- Avatar -->
+                            <div class="rounded-circle border border-4 border-white shadow-sm position-absolute d-flex align-items-center justify-content-center bg-primary text-white fs-1 fw-bold" style="top: -64px; left: 2rem; width: 128px; height: 128px;">
+                                <?= $initials ?>
+                            </div>
                             
                             <div class="d-flex justify-content-end mb-4">
-                                <a href="settings.php" class="btn btn-outline-primary btn-sm fw-bold"><i class="bi bi-pencil me-1"></i> Edit Profile</a>
+                                <a href="settings.php" class="btn btn-outline-primary btn-sm fw-bold"><i class="bi bi-pencil me-1"></i>Edit Profile</a>
                             </div>
 
                             <div class="d-flex align-items-center mt-2 mb-1">
-                                <h3 class="fw-bold mb-0 me-2">Kamrul Islam</h3>
-                                <i class="bi bi-patch-check-fill text-primary-custom fs-4" title="Verified Tutor"></i>
+                                <h3 class="fw-bold mb-0 me-2"><?= htmlspecialchars($tutor['full_name']) ?></h3>
+                                <?php if ($tutor['is_verified']): ?>
+                                    <i class="bi bi-patch-check-fill text-primary-custom fs-4" title="Verified Tutor"></i>
+                                <?php endif; ?>
                             </div>
-                            <p class="text-muted mb-3"><i class="bi bi-mortarboard-fill me-2"></i>BBA Student at North South University</p>
+                            <p class="text-muted mb-3"><i class="bi bi-mortarboard-fill me-2"></i><?= htmlspecialchars($tutor['department'] ?? 'Department') ?> at <?= htmlspecialchars($tutor['university'] ?? 'University') ?></p>
                             
                             <div class="d-flex gap-3 mb-4">
-                                <span class="badge bg-warning text-dark px-3 py-2 fs-6"><i class="bi bi-star-fill me-1"></i> 4.9 Rating</span>
-                                <span class="badge bg-light text-dark border px-3 py-2 fs-6">3 Years Experience</span>
+                                <span class="badge bg-warning text-dark px-3 py-2 fs-6"><i class="bi bi-star-fill me-1"></i> New Tutor</span>
+                                <span class="badge bg-light text-dark border px-3 py-2 fs-6"><?= (int)$tutor['experience_years'] ?> Years Experience</span>
                             </div>
 
                             <hr class="border-secondary border-opacity-25 mb-4">
@@ -54,23 +73,15 @@
                             <div class="row g-4 mb-4">
                                 <div class="col-md-6">
                                     <div class="small text-muted fw-bold text-uppercase mb-1">Current CGPA</div>
-                                    <div class="fw-medium">3.90</div>
+                                    <div class="fw-medium"><?= htmlspecialchars($tutor['cgpa'] ?? 'N/A') ?></div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="small text-muted fw-bold text-uppercase mb-1">Expected Salary</div>
-                                    <div class="fw-medium">From 5,000 BDT/mo</div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="small text-muted fw-bold text-uppercase mb-1">Preferred Subjects</div>
-                                    <div class="d-flex gap-2 flex-wrap mt-2">
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border">English</span>
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border">ICT</span>
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border">General Math</span>
-                                    </div>
+                                    <div class="fw-medium"><?= $tutor['expected_salary'] ? 'From ' . htmlspecialchars($tutor['expected_salary']) . ' BDT/mo' : 'Negotiable' ?></div>
                                 </div>
                                 <div class="col-12">
                                     <div class="small text-muted fw-bold text-uppercase mb-1">Preferred Areas</div>
-                                    <div class="fw-medium">Bashundhara, Banani, Gulshan</div>
+                                    <div class="fw-medium"><?= htmlspecialchars($tutor['preferred_areas'] ?? 'Not specified') ?></div>
                                 </div>
                             </div>
 
@@ -84,7 +95,7 @@
                                         <div class="bg-light text-primary-custom rounded p-2 me-3 fs-5"><i class="bi bi-envelope-fill"></i></div>
                                         <div>
                                             <div class="small text-muted fw-bold text-uppercase">Email</div>
-                                            <div class="fw-medium">kamrul@example.com</div>
+                                            <div class="fw-medium"><?= htmlspecialchars($tutor['email']) ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -93,7 +104,7 @@
                                         <div class="bg-light text-success rounded p-2 me-3 fs-5"><i class="bi bi-telephone-fill"></i></div>
                                         <div>
                                             <div class="small text-muted fw-bold text-uppercase">Phone</div>
-                                            <div class="fw-medium">+880 1612 345678</div>
+                                            <div class="fw-medium"><?= htmlspecialchars($tutor['phone'] ?? 'Not provided') ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -113,3 +124,6 @@
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
+
+
+

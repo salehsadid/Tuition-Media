@@ -50,8 +50,8 @@
                                 <span class="badge-warning">Pending</span>
                             </td>
                             <td class="text-end">
-                                <a href="tuition-details.php" class="btn btn-sm btn-outline-primary" title="View Job"><i class="bi bi-eye"></i></a>
-                                <button class="btn btn-sm btn-outline-danger" title="Withdraw Application"><i class="bi bi-x-circle"></i></button>
+                                <a href="tuition-details.php" class="btn btn-sm btn-outline-primary" title="View Job">View Job</a>
+                                <button class="btn btn-sm btn-outline-danger" title="Withdraw Application">Withdraw Application</button>
                             </td>
                         </tr>
                         <tr>
@@ -85,7 +85,7 @@
                                 <span class="badge-danger">Rejected</span>
                             </td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary" disabled><i class="bi bi-eye"></i></button>
+                                <button class="btn btn-sm btn-outline-secondary" disabled></button>
                             </td>
                         </tr>
                     </tbody>
@@ -100,3 +100,5 @@
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
+
+

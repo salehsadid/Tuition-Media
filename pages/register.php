@@ -2,6 +2,71 @@
 /**
  * SmartTutor - Register Page
  */
+session_start();
+require_once '../config/database.php';
+
+$error = '';
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $db = Database::getInstance();
+    
+    $role = $_POST['role'] ?? 'student';
+    $fullName = $_POST['full_name'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $phone = $_POST['phone'] ?? '';
+    $password = $_POST['password'] ?? '';
+    $confirmPassword = $_POST['confirm_password'] ?? '';
+    
+    if ($password !== $confirmPassword) {
+        $error = "Passwords do not match.";
+    } else {
+        try {
+            // Check if email exists
+            $row = $db->fetchOne("SELECT COUNT(*) as count FROM ST_USER WHERE email = :email", ['email' => $email]);
+            if ($row && $row['count'] > 0) {
+                $error = "Email already exists.";
+            } else {
+                $hash = password_hash($password, PASSWORD_BCRYPT);
+                // Insert User
+                $db->execute(
+                    "INSERT INTO ST_USER (email, password_hash, role) VALUES (:email, :hash, :role)",
+                    ['email' => $email, 'hash' => $hash, 'role' => $role]
+                );
+                
+                // Get the new user ID
+                $userRow = $db->fetchOne("SELECT user_id FROM ST_USER WHERE email = :email", ['email' => $email]);
+                $userId = $userRow['user_id'];
+                
+                if ($role === 'student') {
+                    $address = $_POST['address'] ?? '';
+                    $db->execute(
+                        "INSERT INTO ST_STUDENT (user_id, full_name, phone, address) VALUES (:u_id, :fname, :phone, :addr)",
+                        ['u_id' => $userId, 'fname' => $fullName, 'phone' => $phone, 'addr' => $address]
+                    );
+                } else if ($role === 'tutor') {
+                    $university = $_POST['university'] ?? '';
+                    $department = $_POST['department'] ?? '';
+                    $cgpa = $_POST['cgpa'] ?? null;
+                    if ($cgpa === '') $cgpa = null;
+                    $experience = $_POST['experience'] ?? 0;
+                    if ($experience === '') $experience = 0;
+                    
+                    $db->execute(
+                        "INSERT INTO ST_TUTOR (user_id, full_name, phone, university, department, cgpa, experience_years) VALUES (:u_id, :fname, :phone, :uni, :dept, :cgpa, :exp)",
+                        ['u_id' => $userId, 'fname' => $fullName, 'phone' => $phone, 'uni' => $university, 'dept' => $department, 'cgpa' => $cgpa, 'exp' => $experience]
+                    );
+                }
+                
+                $db->execute("COMMIT");
+                
+                $success = "Account created successfully! You can now login.";
+            }
+        } catch (Exception $e) {
+            $error = "Registration failed: " . $e->getMessage();
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,7 +119,19 @@
                 <div class="auth-body pt-4">
                     <h4 class="fw-bold mb-4">Create your account</h4>
                     
-                    <form action="/pages/login.php" method="GET">
+                    <?php if ($error): ?>
+                        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                    <?php endif; ?>
+                    
+                    <?php if ($success): ?>
+                        <div class="alert alert-success">
+                            <?= htmlspecialchars($success) ?>
+                            <a href="login.php" class="alert-link">Login here</a>.
+                        </div>
+                    <?php endif; ?>
+
+                    <form action="register.php" method="POST">
+                        <input type="hidden" name="role" id="role-input" value="student">
                         
                         <!-- Common Fields -->
                         <div class="row g-3 mb-3">
@@ -62,7 +139,7 @@
                                 <label class="form-label fw-medium small text-muted">Full Name</label>
                                 <div class="input-group input-group-custom">
                                     <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                    <input type="text" class="form-control fs-6" placeholder="John Doe" required>
+                                    <input type="text" name="full_name" class="form-control fs-6" placeholder="Saleh Sadid Mir" required>
                                 </div>
                             </div>
                             
@@ -70,7 +147,7 @@
                                 <label class="form-label fw-medium small text-muted">Email Address</label>
                                 <div class="input-group input-group-custom">
                                     <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                    <input type="email" class="form-control fs-6" placeholder="name@example.com" required>
+                                    <input type="email" name="email" class="form-control fs-6" placeholder="name@example.com" required>
                                 </div>
                             </div>
 
@@ -78,7 +155,7 @@
                                 <label class="form-label fw-medium small text-muted">Phone Number</label>
                                 <div class="input-group input-group-custom">
                                     <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                                    <input type="tel" class="form-control fs-6" placeholder="01XXX-XXXXXX" required>
+                                    <input type="tel" name="phone" class="form-control fs-6" placeholder="01XXX-XXXXXX" required>
                                 </div>
                             </div>
                         </div>
@@ -90,21 +167,21 @@
                                     <label class="form-label fw-medium small text-muted">Institution Name</label>
                                     <div class="input-group input-group-custom">
                                         <span class="input-group-text"><i class="bi bi-building"></i></span>
-                                        <input type="text" class="form-control fs-6" placeholder="School/College Name">
+                                        <input type="text" name="institution" class="form-control fs-6" placeholder="School/College Name">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-medium small text-muted">Class / Academic Level</label>
                                     <div class="input-group input-group-custom">
                                         <span class="input-group-text"><i class="bi bi-bar-chart"></i></span>
-                                        <input type="text" class="form-control fs-6" placeholder="e.g. Class 10, HSC">
+                                        <input type="text" name="class_level" class="form-control fs-6" placeholder="e.g. Class 10, HSC">
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label fw-medium small text-muted">Current Address</label>
                                     <div class="input-group input-group-custom">
                                         <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                                        <input type="text" class="form-control fs-6" placeholder="Area, City">
+                                        <input type="text" name="address" class="form-control fs-6" placeholder="Area, City">
                                     </div>
                                 </div>
                             </div>
@@ -117,35 +194,35 @@
                                     <label class="form-label fw-medium small text-muted">University Name</label>
                                     <div class="input-group input-group-custom">
                                         <span class="input-group-text"><i class="bi bi-bank"></i></span>
-                                        <input type="text" class="form-control fs-6" placeholder="e.g. BUET, DU">
+                                        <input type="text" name="university" class="form-control fs-6" placeholder="e.g. BUET, DU">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-medium small text-muted">Department</label>
                                     <div class="input-group input-group-custom">
                                         <span class="input-group-text"><i class="bi bi-book"></i></span>
-                                        <input type="text" class="form-control fs-6" placeholder="e.g. CSE, Physics">
+                                        <input type="text" name="department" class="form-control fs-6" placeholder="e.g. CSE, Physics">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-medium small text-muted">CGPA</label>
                                     <div class="input-group input-group-custom">
                                         <span class="input-group-text"><i class="bi bi-award"></i></span>
-                                        <input type="number" step="0.01" max="4.00" class="form-control fs-6" placeholder="3.50">
+                                        <input type="number" name="cgpa" step="0.01" max="4.00" class="form-control fs-6" placeholder="3.50">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-medium small text-muted">Experience (Years)</label>
                                     <div class="input-group input-group-custom">
                                         <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
-                                        <input type="number" min="0" class="form-control fs-6" placeholder="2">
+                                        <input type="number" name="experience" min="0" class="form-control fs-6" placeholder="2">
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label fw-medium small text-muted">Current Address</label>
                                     <div class="input-group input-group-custom">
                                         <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                                        <input type="text" class="form-control fs-6" placeholder="Area, City">
+                                        <input type="text" name="tutor_address" class="form-control fs-6" placeholder="Area, City">
                                     </div>
                                 </div>
                             </div>
@@ -157,7 +234,7 @@
                                 <label class="form-label fw-medium small text-muted">Password</label>
                                 <div class="input-group input-group-custom">
                                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                    <input type="password" id="password" class="form-control fs-6" placeholder="••••••••" required>
+                                    <input type="password" id="password" name="password" class="form-control fs-6" placeholder="••••••••" required>
                                     <button class="btn btn-light border toggle-password bg-white" type="button" data-target="password">
                                         <i class="bi bi-eye text-muted"></i>
                                     </button>
@@ -173,7 +250,7 @@
                                 <label class="form-label fw-medium small text-muted">Confirm Password</label>
                                 <div class="input-group input-group-custom">
                                     <span class="input-group-text"><i id="match-icon" class="bi bi-shield-lock text-muted"></i></span>
-                                    <input type="password" id="confirm-password" class="form-control fs-6" placeholder="••••••••" required>
+                                    <input type="password" id="confirm-password" name="confirm_password" class="form-control fs-6" placeholder="••••••••" required>
                                     <button class="btn btn-light border toggle-password bg-white" type="button" data-target="confirm-password">
                                         <i class="bi bi-eye text-muted"></i>
                                     </button>
@@ -181,23 +258,15 @@
                             </div>
                         </div>
 
-                        <!-- Terms -->
-                        <div class="form-check mb-4">
-                            <input class="form-check-input shadow-none" type="checkbox" id="terms" required>
-                            <label class="form-check-label small text-muted" for="terms">
-                                I agree to the <a href="#" class="text-primary-custom text-decoration-none">Terms</a> & <a href="#" class="text-primary-custom text-decoration-none">Privacy Policy</a>
-                            </label>
-                        </div>
-
                         <!-- Submit Button -->
                         <button type="submit" class="btn btn-brand w-100 fs-6 mb-4">
-                            Create Account <i class="bi bi-person-plus ms-2"></i>
+                            Create Account
                         </button>
 
                         <!-- Footer Links -->
                         <div class="text-center">
-                            <p class="text-muted small mb-2">Already have an account? <a href="/pages/login.php" class="text-primary-custom fw-bold text-decoration-none">Sign In</a></p>
-                            <a href="/pages/index.php" class="text-muted small text-decoration-none"><i class="bi bi-arrow-left me-1"></i>Back to Home</a>
+                            <p class="text-muted small mb-2">Already have an account? <a href="login.php" class="text-primary-custom fw-bold text-decoration-none">Sign In</a></p>
+                            <a href="index.php" class="text-muted small text-decoration-none">Back to Home</a>
                         </div>
                     </form>
                 </div>

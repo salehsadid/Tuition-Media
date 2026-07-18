@@ -1,7 +1,55 @@
 <?php
-/**
- * SmartTutor - My Tuition Posts (Student)
- */
+session_start();
+require_once '../../config/database.php';
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
+    header('Location: ../login.php');
+    exit;
+}
+
+$db = Database::getInstance();
+$userId = $_SESSION['user_id'];
+$success = '';
+$error = '';
+
+// Get student_id
+$studentRow = $db->fetchOne("SELECT student_id FROM ST_STUDENT WHERE user_id = :u_id", ['u_id' => $userId]);
+$studentId = $studentRow ? $studentRow['student_id'] : null;
+
+// Handle Delete Post
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_post_id'])) {
+    $deletePostId = $_POST['delete_post_id'];
+    try {
+        // Only delete if status is open and it belongs to this student
+        $db->execute("DELETE FROM ST_TUITION_POST WHERE post_id = :pid AND student_id = :sid AND status = 'open'", 
+            ['pid' => $deletePostId, 'sid' => $studentId]);
+        $db->execute("COMMIT");
+        $success = "Post deleted successfully.";
+    } catch (Exception $e) {
+        $error = "Failed to delete post. It might have pending applications or you don't have permission.";
+    }
+}
+
+// Fetch posts
+$posts = [];
+if ($studentId) {
+    $posts = $db->fetchAll("
+        SELECT 
+            p.post_id,
+            p.class_level,
+            p.monthly_salary,
+            p.status,
+            s.subject_name,
+            l.area_name,
+            l.district,
+            FUNC_GET_TOTAL_APPS(p.post_id) as total_apps
+        FROM ST_TUITION_POST p
+        JOIN ST_SUBJECT s ON p.subject_id = s.subject_id
+        JOIN ST_LOCATION l ON p.location_id = l.location_id
+        WHERE p.student_id = :sid
+        ORDER BY p.created_at DESC
+    ", ['sid' => $studentId]);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,8 +76,10 @@
                     <i class="bi bi-plus me-1"></i>New Post
                 </a>
             </div>
+            
+            <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
+            <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-            <!-- Table -->
             <div class="table-custom table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead>
@@ -43,90 +93,47 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="fw-bold text-secondary-custom">Mathematics</div>
-                                <div class="small text-muted">Class 10 (SSC)</div>
-                            </td>
-                            <td>Dhanmondi, Dhaka</td>
-                            <td class="fw-bold">5,000 BDT</td>
-                            <td>
-                                <span class="badge bg-primary rounded-pill px-3">12</span>
-                            </td>
-                            <td>
-                                <span class="badge-success">Open</span>
-                            </td>
-                            <td class="text-end">
-                                <a href="applications.php" class="btn btn-sm btn-outline-primary me-2"><i class="bi bi-eye"></i> View</a>
-                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="fw-bold text-secondary-custom">Physics</div>
-                                <div class="small text-muted">HSC 1st Year</div>
-                            </td>
-                            <td>Mirpur-10, Dhaka</td>
-                            <td class="fw-bold">6,500 BDT</td>
-                            <td>
-                                <span class="badge bg-secondary rounded-pill px-3">0</span>
-                            </td>
-                            <td>
-                                <span class="badge-success">Open</span>
-                            </td>
-                            <td class="text-end">
-                                <a href="#" class="btn btn-sm btn-outline-primary me-2"><i class="bi bi-pencil"></i> Edit</a>
-                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="fw-bold text-secondary-custom">English Spoken</div>
-                                <div class="small text-muted">Professional</div>
-                            </td>
-                            <td>Uttara, Dhaka</td>
-                            <td class="fw-bold">8,000 BDT</td>
-                            <td>
-                                <span class="badge bg-secondary rounded-pill px-3">5</span>
-                            </td>
-                            <td>
-                                <span class="badge-warning">Assigned</span>
-                            </td>
-                            <td class="text-end">
-                                <a href="assigned-tutors.php" class="btn btn-sm btn-primary-custom me-2"><i class="bi bi-person-check"></i> Tutor</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="fw-bold text-secondary-custom">Chemistry</div>
-                                <div class="small text-muted">SSC</div>
-                            </td>
-                            <td>Gulshan, Dhaka</td>
-                            <td class="fw-bold">5,500 BDT</td>
-                            <td>
-                                <span class="badge bg-secondary rounded-pill px-3">8</span>
-                            </td>
-                            <td>
-                                <span class="badge-neutral">Closed</span>
-                            </td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary" disabled><i class="bi bi-eye"></i> View</button>
-                            </td>
-                        </tr>
+                        <?php if (empty($posts)): ?>
+                            <tr><td colspan="6" class="text-center py-4">No tuition posts found. <a href="create-tuition.php">Create one now</a>.</td></tr>
+                        <?php else: ?>
+                            <?php foreach ($posts as $post): ?>
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold text-secondary-custom"><?= htmlspecialchars($post['subject_name']) ?></div>
+                                        <div class="small text-muted"><?= htmlspecialchars($post['class_level']) ?></div>
+                                    </td>
+                                    <td><?= htmlspecialchars($post['area_name'] . ', ' . $post['district']) ?></td>
+                                    <td class="fw-bold"><?= htmlspecialchars($post['monthly_salary']) ?> BDT</td>
+                                    <td>
+                                        <span class="badge bg-primary rounded-pill px-3"><?= (int)$post['total_apps'] ?></span>
+                                    </td>
+                                    <td>
+                                        <?php if ($post['status'] === 'open'): ?>
+                                            <span class="badge-success">Open</span>
+                                        <?php elseif ($post['status'] === 'assigned'): ?>
+                                            <span class="badge-warning">Assigned</span>
+                                        <?php else: ?>
+                                            <span class="badge-neutral">Closed</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-end">
+                                        <?php if ($post['status'] === 'open'): ?>
+                                            <form action="my-posts.php" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                                <input type="hidden" name="delete_post_id" value="<?= $post['post_id'] ?>">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                        <?php elseif ($post['status'] === 'assigned'): ?>
+                                            <a href="#" class="btn btn-sm btn-primary-custom me-2">Tutor</a>
+                                        <?php else: ?>
+                                            <button class="btn btn-sm btn-outline-secondary" disabled>View</button>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination (Dummy) -->
-            <nav class="mt-4">
-                <ul class="pagination justify-content-end">
-                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-            </nav>
-
         </div>
     </main>
 </div>
@@ -135,3 +142,4 @@
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
+

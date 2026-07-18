@@ -29,7 +29,7 @@
             <button class="btn border-0 p-0 d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
                 <img src="https://ui-avatars.com/api/?name=John+Doe&background=1A56DB&color=fff&size=64" class="rounded-circle" width="34" height="34" style="border:2px solid var(--border-subtle);">
                 <div class="d-none d-md-block text-start">
-                    <div style="font-size:0.8125rem; font-weight:600; color:var(--text-primary); line-height:1.2;">John Doe</div>
+                    <div style="font-size:0.8125rem; font-weight:600; color:var(--text-primary); line-height:1.2;">Saleh Sadid Mir</div>
                     <div style="font-size:0.6875rem; color:var(--text-muted); line-height:1.2;">Student</div>
                 </div>
             </button>
@@ -37,8 +37,9 @@
                 <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2 text-muted"></i>My Profile</a></li>
                 <li><a class="dropdown-item" href="settings.php"><i class="bi bi-gear me-2 text-muted"></i>Settings</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/pages/index.php" style="color:var(--color-danger);"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                <li><a class="dropdown-item" href="/pages/index.php" style="color:var(--color-danger);">Logout</a></li>
             </ul>
         </div>
     </div>
 </header>
+

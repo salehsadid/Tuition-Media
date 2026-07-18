@@ -39,7 +39,12 @@ class Database
     public function fetchAll(string $sql, array $binds = []): array
     {
         $stmt = $this->prepare($sql, $binds);
-        oci_execute($stmt, OCI_DEFAULT);
+        $result = oci_execute($stmt, OCI_DEFAULT);
+        if (!$result) {
+            $e = oci_error($stmt);
+            oci_free_statement($stmt);
+            throw new Exception($e['message']);
+        }
 
         $rows = [];
         while ($row = oci_fetch_assoc($stmt)) {
@@ -53,7 +58,12 @@ class Database
     public function fetchOne(string $sql, array $binds = []): ?array
     {
         $stmt = $this->prepare($sql, $binds);
-        oci_execute($stmt, OCI_DEFAULT);
+        $result = oci_execute($stmt, OCI_DEFAULT);
+        if (!$result) {
+            $e = oci_error($stmt);
+            oci_free_statement($stmt);
+            throw new Exception($e['message']);
+        }
 
         $row = oci_fetch_assoc($stmt);
         oci_free_statement($stmt);
@@ -65,6 +75,11 @@ class Database
     {
         $stmt = $this->prepare($sql, $binds);
         $result = oci_execute($stmt, OCI_DEFAULT);
+        if (!$result) {
+            $e = oci_error($stmt);
+            oci_free_statement($stmt);
+            throw new Exception($e['message']);
+        }
         oci_free_statement($stmt);
         return (bool) $result;
     }
@@ -87,3 +102,4 @@ class Database
     }
 
 }
+

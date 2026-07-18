@@ -37,8 +37,9 @@
                 <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2 text-muted"></i>Profile</a></li>
                 <li><a class="dropdown-item" href="settings.php"><i class="bi bi-gear me-2 text-muted"></i>Settings</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/pages/index.php" style="color:var(--color-danger);"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                <li><a class="dropdown-item" href="/pages/index.php" style="color:var(--color-danger);">Logout</a></li>
             </ul>
         </div>
     </div>
 </header>
+
