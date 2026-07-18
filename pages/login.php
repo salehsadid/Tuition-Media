@@ -1,30 +1,54 @@
 <?php
-session_start();
+$sessionPath = __DIR__ . '/../sessions';
+if (!is_dir($sessionPath)) mkdir($sessionPath, 0777, true);
+
 require_once '../config/database.php';
+
+// Role → session name map (must match auth.php)
+$sessionNames = [
+    'student' => 'STU_SESSION',
+    'tutor'   => 'TUT_SESSION',
+    'admin'   => 'ADM_SESSION',
+];
 
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
+    $email         = $_POST['email'] ?? '';
+    $password      = $_POST['password'] ?? '';
+    $requestedRole = $_POST['role'] ?? 'student';
 
     if (!empty($email) && !empty($password)) {
-        $db = Database::getInstance();
-        $user = $db->fetchOne("SELECT * FROM ST_USER WHERE email = :email AND is_active = 1", ['email' => $email]);
+        // Boot a temporary session to verify credentials
+        $sessionName = $sessionNames[$requestedRole] ?? 'STU_SESSION';
+        session_save_path($sessionPath);
+        ini_set('session.gc_maxlifetime', 86400 * 30);
+        session_name($sessionName);
+        session_set_cookie_params([
+            'lifetime' => 86400 * 30,
+            'path'     => '/',
+            'secure'   => false,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
+        session_start();
+
+        $db   = Database::getInstance();
+        $user = $db->fetchOne(
+            "SELECT * FROM ST_USER WHERE email = :email AND is_active = 1",
+            ['email' => $email]
+        );
 
         if ($user && password_verify($password, $user['password_hash'])) {
-            $requestedRole = $_POST['role'] ?? 'student';
-            
-            // Enforce role restriction for student and tutor. Block admin.
             if ($user['role'] === 'admin') {
                 $error = "Admin accounts must log in via the Admin Login page.";
-            } else if ($user['role'] !== $requestedRole) {
+            } elseif ($user['role'] !== $requestedRole) {
                 $error = "This is not a " . ucfirst($requestedRole) . " account.";
             } else {
                 $_SESSION['user_id'] = $user['user_id'];
-                $_SESSION['role'] = $user['role'];
-    
-                // Redirect based on role
+                $_SESSION['role']    = $user['role'];
+                unset($_SESSION['display_name']);
+
                 if ($user['role'] === 'tutor') {
                     header("Location: tutor/dashboard.php");
                 } else {
@@ -113,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
-                <!-- Remember Me & Terms -->
+                <!-- Remember Me -->
                 <div class="mb-4">
                     <div class="form-check mb-2">
                         <input class="form-check-input shadow-none" type="checkbox" id="rememberMe">
@@ -143,4 +167,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="../assets/js/main.js"></script>
 </body>
 </html>
-

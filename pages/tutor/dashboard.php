@@ -2,10 +2,37 @@
 require_once '../../includes/auth.php';
 requireAuth('tutor');
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'tutor') {
-    header('Location: ../login.php');
-    exit;
-}
+$db = Database::getInstance();
+$userId = $_SESSION['user_id'];
+
+// Get tutor_id
+$tutorRow = $db->fetchOne("SELECT tutor_id FROM ST_TUTOR WHERE user_id = :u_id", ['u_id' => $userId]);
+$tutorId = $tutorRow ? $tutorRow['tutor_id'] : 0;
+
+// Active Tuitions (assigned applications)
+$activeTuitions = $db->fetchOne("SELECT COUNT(*) as cnt FROM ST_APPLICATION WHERE tutor_id = :tid AND status = 'accepted'", ['tid' => $tutorId])['cnt'];
+
+// Pending Applications
+$pendingApps = $db->fetchOne("SELECT COUNT(*) as cnt FROM ST_APPLICATION WHERE tutor_id = :tid AND status = 'pending'", ['tid' => $tutorId])['cnt'];
+
+// Total Applications
+$totalApps = $db->fetchOne("SELECT COUNT(*) as cnt FROM ST_APPLICATION WHERE tutor_id = :tid", ['tid' => $tutorId])['cnt'];
+
+// Recent Applications (Last 5)
+$recentActivity = $db->fetchAll("
+    SELECT * FROM (
+        SELECT 
+            a.status, 
+            TO_CHAR(a.applied_at, 'DD Mon, YYYY') as applied_dt,
+            s.subject_name,
+            p.class_level
+        FROM ST_APPLICATION a
+        JOIN ST_TUITION_POST p ON a.post_id = p.post_id
+        JOIN ST_SUBJECT s ON p.subject_id = s.subject_id
+        WHERE a.tutor_id = :tid
+        ORDER BY a.applied_at DESC
+    ) WHERE ROWNUM <= 5
+", ['tid' => $tutorId]);
 
 /**
  * SmartTutor - Tutor Dashboard Overview
@@ -31,7 +58,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'tutor') {
             <div class="page-header">
                 <h3>Dashboard Overview</h3>
                 <a href="browse-tuition.php" class="btn btn-brand">
-                    <i class="bi bi-search me-2"></i>Find Jobs
+                    Find Jobs
                 </a>
             </div>
 
@@ -45,7 +72,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'tutor') {
                                 <i class="bi bi-person-workspace"></i>
                             </div>
                         </div>
-                        <div class="stat-card__value">3</div>
+                        <div class="stat-card__value"><?= $activeTuitions ?></div>
                         <div class="stat-card__sub" style="color:var(--text-muted);">Currently teaching</div>
                     </div>
                 </div>
@@ -57,7 +84,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'tutor') {
                                 <i class="bi bi-hourglass-split"></i>
                             </div>
                         </div>
-                        <div class="stat-card__value">5</div>
+                        <div class="stat-card__value"><?= $pendingApps ?></div>
                         <div class="stat-card__sub" style="color:var(--text-muted);">Awaiting response</div>
                     </div>
                 </div>
@@ -69,7 +96,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'tutor') {
                                 <i class="bi bi-briefcase"></i>
                             </div>
                         </div>
-                        <div class="stat-card__value">18</div>
+                        <div class="stat-card__value"><?= $totalApps ?></div>
                         <div class="stat-card__sub" style="color:var(--text-muted);">Submitted so far</div>
                     </div>
                 </div>
@@ -92,29 +119,30 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'tutor') {
                 <div class="col-lg-4">
                     <div class="card-custom p-4 h-100">
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h6 style="font-weight:700; color:var(--text-primary); margin:0;">Recent Activity</h6>
-                            <a href="notifications.php" style="font-size:0.8125rem; font-weight:600; color:var(--p-500); text-decoration:none;">View all</a>
+                            <h6 style="font-weight:700; color:var(--text-primary); margin:0;">Recent Applications</h6>
+                            <a href="applied-jobs.php" style="font-size:0.8125rem; font-weight:600; color:var(--p-500); text-decoration:none;">View all</a>
                         </div>
-                        <div class="timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-dot" style="color:var(--color-success); background:var(--color-success);"></div>
-                                <div class="timeline-item__title">Application Accepted</div>
-                                <div class="timeline-item__body">Hired for Physics HSC — Mirpur.</div>
-                                <div class="timeline-item__time">Yesterday</div>
+                        
+                        <?php if (empty($recentActivity)): ?>
+                            <div class="text-center py-4 text-muted small">No recent applications found.</div>
+                        <?php else: ?>
+                            <div class="timeline">
+                                <?php foreach ($recentActivity as $act): 
+                                    $color = 'var(--gray-500)';
+                                    if ($act['status'] === 'accepted') $color = 'var(--color-success)';
+                                    if ($act['status'] === 'rejected') $color = 'var(--color-danger)';
+                                    if ($act['status'] === 'pending') $color = 'var(--color-warning)';
+                                ?>
+                                    <div class="timeline-item">
+                                        <div class="timeline-dot" style="color:<?= $color ?>; background:<?= $color ?>;"></div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-title">Applied for <?= htmlspecialchars($act['subject_name']) ?> (<?= htmlspecialchars($act['class_level']) ?>)</div>
+                                            <div class="timeline-meta"><?= htmlspecialchars($act['applied_dt']) ?> — <span style="color:<?= $color ?>; font-weight:600;"><?= ucfirst(htmlspecialchars($act['status'])) ?></span></div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
-                            <div class="timeline-item">
-                                <div class="timeline-dot" style="color:var(--p-500); background:var(--brand-primary);"></div>
-                                <div class="timeline-item__title">Application Submitted</div>
-                                <div class="timeline-item__body">Applied for Math Class 10.</div>
-                                <div class="timeline-item__time">3 days ago</div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-dot" style="color:var(--gray-400); background:var(--gray-400);"></div>
-                                <div class="timeline-item__title">Application Rejected</div>
-                                <div class="timeline-item__body">Chemistry O Levels application closed.</div>
-                                <div class="timeline-item__time">1 week ago</div>
-                            </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

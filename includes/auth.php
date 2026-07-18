@@ -1,48 +1,96 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
 
-function requireAuth($expectedRole) {
+// Each role gets its own independent session so multiple roles can be tested
+// simultaneously in different tabs of the same browser.
+define('SESSION_NAMES', [
+    'student' => 'STU_SESSION',
+    'tutor'   => 'TUT_SESSION',
+    'admin'   => 'ADM_SESSION',
+]);
+
+$sessionPath = __DIR__ . '/../sessions';
+if (!is_dir($sessionPath)) mkdir($sessionPath, 0777, true);
+
+/**
+ * Boot the session for $role. Must be called before any output.
+ */
+function _bootSession($role) {
+    static $booted = [];
+    if (isset($booted[$role])) return;
+    $booted[$role] = true;
+
+    $sessionPath = __DIR__ . '/../sessions';
+    $name = SESSION_NAMES[$role] ?? 'SMARTTUTOR_SESSION';
+
+    session_save_path($sessionPath);
+    ini_set('session.gc_maxlifetime', 86400 * 30);
+    session_name($name);
+    session_set_cookie_params([
+        'lifetime' => 86400 * 30,
+        'path'     => '/',
+        'secure'   => false,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
+}
 
-    if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== $expectedRole) {
-        header('Location: ../login.php');
-        exit;
-    }
+/**
+ * Require a logged-in user with $expectedRole.
+ * Redirects to /pages/login.php if check fails.
+ */
+function requireAuth($expectedRole) {
+    _bootSession($expectedRole);
 
-    $db = Database::getInstance();
-    $userId = $_SESSION['user_id'];
-    
-    // Cross-check with database to ensure user still exists and role matches
-    $user = $db->fetchOne("SELECT role FROM ST_USER WHERE user_id = :u_id", ['u_id' => $userId]);
-    
-    if (!$user || $user['role'] !== $expectedRole) {
-        // Destroy session and redirect if user is deleted or role changed
-        session_destroy();
-        header('Location: ../login.php');
+    if (!isset($_SESSION['user_id'], $_SESSION['role']) || $_SESSION['role'] !== $expectedRole) {
+        header('Location: /pages/login.php');
         exit;
     }
 }
 
-function getLoggedInUserName() {
-    if (!isset($_SESSION['user_id'])) return "Unknown User";
-    
-    $db = Database::getInstance();
-    $userId = $_SESSION['user_id'];
-    $role = $_SESSION['role'];
+function requireAdminAuth() {
+    _bootSession('admin');
 
-    if ($role === 'student') {
-        $row = $db->fetchOne("SELECT full_name FROM ST_STUDENT WHERE user_id = :u_id", ['u_id' => $userId]);
-        return $row ? $row['full_name'] : "Student";
-    } else if ($role === 'tutor') {
-        $row = $db->fetchOne("SELECT full_name FROM ST_TUTOR WHERE user_id = :u_id", ['u_id' => $userId]);
-        return $row ? $row['full_name'] : "Tutor";
-    } else if ($role === 'admin') {
-        $row = $db->fetchOne("SELECT full_name FROM ST_ADMIN WHERE user_id = :u_id", ['u_id' => $userId]);
-        return $row ? $row['full_name'] : "Admin";
+    if (!isset($_SESSION['user_id'], $_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        header('Location: /pages/admin-login.php');
+        exit;
     }
-    
-    return "Unknown User";
+}
+
+/**
+ * Returns the display name of the currently logged-in user.
+ * Caches the name in session so Oracle is only hit once per session.
+ */
+function getLoggedInUserName() {
+    if (!isset($_SESSION['user_id'])) return 'Guest';
+
+    if (isset($_SESSION['display_name'])) {
+        return $_SESSION['display_name'];
+    }
+
+    try {
+        $db     = Database::getInstance();
+        $userId = $_SESSION['user_id'];
+        $role   = $_SESSION['role'] ?? '';
+
+        if ($role === 'student') {
+            $row = $db->fetchOne("SELECT full_name FROM ST_STUDENT WHERE user_id = :u_id", ['u_id' => $userId]);
+        } elseif ($role === 'tutor') {
+            $row = $db->fetchOne("SELECT full_name FROM ST_TUTOR WHERE user_id = :u_id", ['u_id' => $userId]);
+        } elseif ($role === 'admin') {
+            $row = $db->fetchOne("SELECT full_name FROM ST_ADMIN WHERE user_id = :u_id", ['u_id' => $userId]);
+        } else {
+            $row = null;
+        }
+
+        $name = $row['full_name'] ?? ucfirst($role ?: 'User');
+        $_SESSION['display_name'] = $name;
+        return $name;
+    } catch (Exception $e) {
+        return ucfirst($_SESSION['role'] ?? 'User');
+    }
 }
 ?>

@@ -106,7 +106,7 @@ function timeElapsedString($datetime, $full = false) {
 
                                 <div class="mt-auto d-flex justify-content-between align-items-center">
                                     <small class="text-muted">Posted <?= timeElapsedString($post['created_at']) ?></small>
-                                    <a href="#" class="btn btn-sm btn-outline-custom fw-bold">View Details</a>
+                                    <a href="tuition-details.php?id=<?= $post['post_id'] ?>" class="btn btn-sm btn-outline-custom fw-bold">View Details</a>
                                 </div>
                             </div>
                         </div>

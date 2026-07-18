@@ -55,6 +55,9 @@
         <div class="text-center small" style="color: var(--p-300);">
             &copy; <?= date('Y') ?> SmartTutor. All rights reserved. Designed for Database Systems Lab.
         </div>
+        <div class="text-center mt-2">
+            <a href="/pages/admin-login.php" style="color: rgba(255,255,255,0.18); font-size: 0.72rem; text-decoration: none; letter-spacing: 0.04em;">Admin Portal</a>
+        </div>
     </div>
 </footer>
 

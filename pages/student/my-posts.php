@@ -71,7 +71,7 @@ if ($studentId) {
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold mb-0">My Tuition Posts</h3>
                 <a href="create-tuition.php" class="btn btn-brand btn-sm">
-                    <i class="bi bi-plus me-1"></i>New Post
+                    New Post
                 </a>
             </div>
             

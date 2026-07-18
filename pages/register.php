@@ -2,7 +2,10 @@
 /**
  * SmartTutor - Register Page
  */
-session_start();
+ini_set('session.gc_maxlifetime', 31536000);
+    session_set_cookie_params(31536000, '/');
+    session_name('SMARTTUTOR_SESSION');
+    session_start();
 require_once '../config/database.php';
 
 $error = '';

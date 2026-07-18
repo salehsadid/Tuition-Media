@@ -35,10 +35,10 @@
                 </p>
                 <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
                     <a href="/pages/register.php" class="btn btn-brand btn-lg shadow-sm">
-                        <i class="bi bi-search me-2"></i>Find a Tutor
+                        Find a Tutor
                     </a>
                     <a href="/pages/register.php" class="btn btn-brand-outline btn-lg bg-white">
-                        <i class="bi bi-person-workspace me-2"></i>Become a Tutor
+                        Become a Tutor
                     </a>
                 </div>
             </div>

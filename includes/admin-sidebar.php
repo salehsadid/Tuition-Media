@@ -32,8 +32,16 @@
                     <i class="bi bi-card-list"></i> Manage Posts
                 </a>
             </li>
-
-
+            <li>
+                <a href="manage-locations.php" class="sidebar-link <?= $current_page=='manage-locations.php' ? 'active' : '' ?>">
+                    <i class="bi bi-geo-alt"></i> Manage Locations
+                </a>
+            </li>
+            <li>
+                <a href="manage-subjects.php" class="sidebar-link <?= $current_page=='manage-subjects.php' ? 'active' : '' ?>">
+                    <i class="bi bi-book"></i> Manage Subjects
+                </a>
+            </li>
 
             <span class="sidebar-section-label">System</span>
             <li>
@@ -58,4 +66,3 @@
         </ul>
     </div>
 </div>
-

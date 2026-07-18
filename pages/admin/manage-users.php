@@ -16,19 +16,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user_id'])) {
     } else {
         try {
             // First find role to delete profile
-            $u = $db->fetchOne("SELECT role FROM ST_USER WHERE user_id = :uid", ['uid' => $deleteId]);
+            $u = $db->fetchOne("SELECT role FROM ST_USER WHERE user_id = :u_id", ['u_id' => $deleteId]);
             if ($u) {
                 if ($u['role'] === 'student') {
-                    // This cascades if we had ON DELETE CASCADE, but let's be safe
-                    $db->execute("DELETE FROM ST_APPLICATION WHERE student_id IN (SELECT student_id FROM ST_STUDENT WHERE user_id = :uid)", ['uid' => $deleteId]);
-                    $db->execute("DELETE FROM ST_TUITION_POST WHERE student_id IN (SELECT student_id FROM ST_STUDENT WHERE user_id = :uid)", ['uid' => $deleteId]);
-                    $db->execute("DELETE FROM ST_STUDENT WHERE user_id = :uid", ['uid' => $deleteId]);
-                } else if ($u['role'] === 'tutor') {
-                    $db->execute("DELETE FROM ST_APPLICATION WHERE tutor_id IN (SELECT tutor_id FROM ST_TUTOR WHERE user_id = :uid)", ['uid' => $deleteId]);
-                    $db->execute("DELETE FROM ST_TUTOR WHERE user_id = :uid", ['uid' => $deleteId]);
+                    // Delete student dependencies first
+                    $db->execute("DELETE FROM ST_APPLICATION WHERE post_id IN (SELECT post_id FROM ST_TUITION_POST WHERE student_id IN (SELECT student_id FROM ST_STUDENT WHERE user_id = :u_id))", ['u_id' => $deleteId]);
+                    $db->execute("DELETE FROM ST_TUITION_POST WHERE student_id IN (SELECT student_id FROM ST_STUDENT WHERE user_id = :u_id)", ['u_id' => $deleteId]);
+                    $db->execute("DELETE FROM ST_STUDENT WHERE user_id = :u_id", ['u_id' => $deleteId]);
+                } elseif ($u['role'] === 'tutor') {
+                    $db->execute("DELETE FROM ST_APPLICATION WHERE tutor_id IN (SELECT tutor_id FROM ST_TUTOR WHERE user_id = :u_id)", ['u_id' => $deleteId]);
+                    $db->execute("DELETE FROM ST_TUTOR WHERE user_id = :u_id", ['u_id' => $deleteId]);
                 }
                 
-                $db->execute("DELETE FROM ST_USER WHERE user_id = :uid", ['uid' => $deleteId]);
+                $db->execute("DELETE FROM ST_USER WHERE user_id = :u_id", ['u_id' => $deleteId]);
                 $db->execute("COMMIT");
                 $success = "User account completely deleted.";
             }

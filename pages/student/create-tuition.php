@@ -138,7 +138,7 @@ $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_na
                     <div class="d-flex justify-content-end gap-3">
                         <button type="reset" class="btn btn-outline-secondary px-4 fw-bold">Clear Form</button>
                         <button type="submit" class="btn btn-brand px-5">
-                            Post Job <i class="bi bi-send ms-2"></i>
+                            Post Job
                         </button>
                     </div>
                 </form>
