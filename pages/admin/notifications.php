@@ -12,8 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mark_read'])) {
     exit;
 }
 
-// Fetch all admin notifications
-$notifications = $db->fetchAll("SELECT * FROM ST_NOTIFICATION WHERE target_role = 'admin' ORDER BY created_at DESC");
+$notifications = $db->fetchAll("
+    SELECT notification_id, title, message, target_role, is_read, 
+           TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at 
+    FROM ST_NOTIFICATION 
+    WHERE target_role = 'admin' 
+    ORDER BY created_at DESC
+");
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -14,7 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mark_read'])) {
 }
 
 // Fetch all tutor notifications
-$notifications = $db->fetchAll("SELECT * FROM ST_NOTIFICATION WHERE target_role = 'tutor' AND user_id = :u_id ORDER BY created_at DESC", ['u_id' => $user_id]);
+$notifications = $db->fetchAll("
+    SELECT notification_id, title, message, target_role, is_read, 
+           TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at 
+    FROM ST_NOTIFICATION 
+    WHERE target_role = 'tutor' AND user_id = :u_id 
+    ORDER BY created_at DESC
+", ['u_id' => $user_id]);
 ?>
 <!DOCTYPE html>
 <html lang="en">
