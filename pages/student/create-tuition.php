@@ -1,10 +1,8 @@
 <?php
-session_start();
-require_once '../../config/database.php';
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
-    header('Location: ../login.php');
-    exit;
-}
+require_once '../../includes/auth.php';
+requireAuth('student');
+
+
 $db = Database::getInstance();
 $userId = $_SESSION['user_id'];
 $success = '';

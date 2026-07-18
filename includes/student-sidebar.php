@@ -54,7 +54,7 @@
             </li>
 
             <li style="margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid rgba(255,255,255,0.07);">
-                <a href="/pages/index.php" class="sidebar-link" style="color:rgba(248,113,113,0.8);">
+                <a href="../logout.php" class="sidebar-link" style="color:rgba(248,113,113,0.8);">
                    Logout
                 </a>
             </li>

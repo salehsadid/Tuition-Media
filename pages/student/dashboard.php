@@ -1,4 +1,12 @@
 <?php
+require_once '../../includes/auth.php';
+requireAuth('student');
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
+    header('Location: ../login.php');
+    exit;
+}
+
 /**
  * SmartTutor - Student Dashboard Overview
  */
@@ -118,4 +126,3 @@
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
-

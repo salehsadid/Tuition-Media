@@ -1,4 +1,7 @@
 <?php
+require_once '../../includes/auth.php';
+requireAuth('admin');
+
 /**
  * SmartTutor - Notifications (Student)
  */

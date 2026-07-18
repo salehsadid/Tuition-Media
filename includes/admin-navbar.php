@@ -29,7 +29,7 @@
             <button class="btn border-0 p-0 d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
                 <img src="https://ui-avatars.com/api/?name=Admin&background=1F2937&color=fff&size=64" class="rounded-circle" width="34" height="34" style="border:2px solid var(--border-subtle);">
                 <div class="d-none d-md-block text-start">
-                    <div style="font-size:0.8125rem; font-weight:600; color:var(--text-primary); line-height:1.2;">Administrator</div>
+                    <div style="font-size:0.8125rem; font-weight:600; color:var(--text-primary); line-height:1.2;"><?= htmlspecialchars(getLoggedInUserName()) ?></div>
                     <div style="font-size:0.6875rem; color:var(--text-muted); line-height:1.2;">Super Admin</div>
                 </div>
             </button>
@@ -37,7 +37,7 @@
                 <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2 text-muted"></i>Profile</a></li>
                 <li><a class="dropdown-item" href="settings.php"><i class="bi bi-gear me-2 text-muted"></i>Settings</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/pages/index.php" style="color:var(--color-danger);">Logout</a></li>
+                <li><a class="dropdown-item" href="../logout.php" style="color:var(--color-danger);">Logout</a></li>
             </ul>
         </div>
     </div>

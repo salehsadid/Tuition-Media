@@ -1,4 +1,12 @@
 <?php
+require_once '../../includes/auth.php';
+requireAuth('tutor');
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'tutor') {
+    header('Location: ../login.php');
+    exit;
+}
+
 /**
  * SmartTutor - Tutor Dashboard Overview
  */
@@ -118,4 +126,3 @@
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
-

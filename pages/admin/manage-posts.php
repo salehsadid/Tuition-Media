@@ -1,7 +1,47 @@
 <?php
-/**
- * SmartTutor - Admin Manage Posts
- */
+require_once '../../includes/auth.php';
+requireAuth('admin');
+
+$db = Database::getInstance();
+$success = '';
+$error = '';
+
+// Handle Delete Post Action
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_post_id'])) {
+    $deleteId = (int)$_POST['delete_post_id'];
+    
+    try {
+        // Delete applications associated with the post first
+        $db->execute("DELETE FROM ST_APPLICATION WHERE post_id = :pid", ['pid' => $deleteId]);
+        // Delete the post
+        $db->execute("DELETE FROM ST_TUITION_POST WHERE post_id = :pid", ['pid' => $deleteId]);
+        $db->execute("COMMIT");
+        $success = "Post completely deleted.";
+    } catch (Exception $e) {
+        $error = "Failed to delete post: " . $e->getMessage();
+    }
+}
+
+// Fetch all posts
+$posts = $db->fetchAll("
+    SELECT 
+        p.post_id,
+        p.class_level,
+        p.monthly_salary,
+        p.status,
+        TO_CHAR(p.created_at, 'DD Mon, YYYY') as created_dt,
+        s.subject_name,
+        l.area_name,
+        l.district,
+        u.email as student_email,
+        st.full_name as student_name
+    FROM ST_TUITION_POST p
+    JOIN ST_SUBJECT s ON p.subject_id = s.subject_id
+    JOIN ST_LOCATION l ON p.location_id = l.location_id
+    JOIN ST_STUDENT st ON p.student_id = st.student_id
+    JOIN ST_USER u ON st.user_id = u.user_id
+    ORDER BY p.created_at DESC
+");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,158 +53,77 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
-<body class="bg-light">
-
+<body>
 <div class="dashboard-wrapper">
     <?php include '../../includes/admin-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/admin-navbar.php'; ?>
-
         <div class="dashboard-content">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="fw-bold mb-0">Manage Tuition Posts</h3>
-            </div>
 
-            <!-- Filters -->
-            <div class="card card-custom p-3 mb-4">
-                <div class="row g-2 align-items-center">
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0 border" style="border-color: #e2e8f0;"><i class="bi bi-search text-muted"></i></span>
-                            <input type="text" class="form-control border-start-0" placeholder="Search by subject or location..." style="border-color: #e2e8f0;">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-select" style="border-color: #e2e8f0;">
-                            <option value="">All Statuses</option>
-                            <option value="open">Open</option>
-                            <option value="assigned">Assigned</option>
-                            <option value="closed">Closed</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-select" style="border-color: #e2e8f0;">
-                            <option value="">All Subjects</option>
-                            <option>Mathematics</option>
-                            <option>Physics</option>
-                            <option>Chemistry</option>
-                            <option>English</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button class="btn w-100 fw-semibold text-white" style="background-color: var(--primary-color);">Filter</button>
-                    </div>
+            <div class="page-header d-flex justify-content-between align-items-center">
+                <h3>Manage Tuition Posts</h3>
+            </div>
+            
+            <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
+            <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
+
+            <div class="card-custom p-0">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0" style="font-size:0.875rem;">
+                        <thead>
+                            <tr>
+                                <th style="padding:1rem 1.25rem; background:var(--gray-50); color:var(--text-muted); font-size:0.75rem; font-weight:700; text-transform:uppercase;">Post Details</th>
+                                <th style="padding:1rem 1.25rem; background:var(--gray-50); color:var(--text-muted); font-size:0.75rem; font-weight:700; text-transform:uppercase;">Posted By (Student)</th>
+                                <th style="padding:1rem 1.25rem; background:var(--gray-50); color:var(--text-muted); font-size:0.75rem; font-weight:700; text-transform:uppercase;">Location & Salary</th>
+                                <th style="padding:1rem 1.25rem; background:var(--gray-50); color:var(--text-muted); font-size:0.75rem; font-weight:700; text-transform:uppercase;">Status</th>
+                                <th style="padding:1rem 1.25rem; background:var(--gray-50); color:var(--text-muted); font-size:0.75rem; font-weight:700; text-transform:uppercase; text-align:right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($posts)): ?>
+                                <tr><td colspan="5" class="text-center py-4 text-muted">No posts found.</td></tr>
+                            <?php else: ?>
+                                <?php foreach ($posts as $p): ?>
+                                    <tr>
+                                        <td style="padding:1rem 1.25rem;">
+                                            <div style="font-weight:600; color:var(--text-primary);"><?= htmlspecialchars($p['subject_name']) ?></div>
+                                            <div style="font-size:0.75rem; color:var(--text-muted);">Class: <?= htmlspecialchars($p['class_level']) ?> • Posted <?= htmlspecialchars($p['created_dt']) ?></div>
+                                        </td>
+                                        <td style="padding:1rem 1.25rem;">
+                                            <div style="font-weight:500; color:var(--text-secondary);"><?= htmlspecialchars($p['student_name']) ?></div>
+                                            <div style="font-size:0.75rem; color:var(--text-muted);"><?= htmlspecialchars($p['student_email']) ?></div>
+                                        </td>
+                                        <td style="padding:1rem 1.25rem;">
+                                            <div style="font-weight:500; color:var(--text-secondary);"><?= htmlspecialchars($p['area_name'] . ', ' . $p['district']) ?></div>
+                                            <div style="font-size:0.75rem; color:var(--brand-primary); fw-bold"><?= htmlspecialchars($p['monthly_salary']) ?> BDT</div>
+                                        </td>
+                                        <td style="padding:1rem 1.25rem;">
+                                            <?php if ($p['status'] === 'open'): ?>
+                                                <span class="badge-success px-2 py-1" style="font-size:0.7rem;">Open</span>
+                                            <?php elseif ($p['status'] === 'assigned'): ?>
+                                                <span class="badge-warning px-2 py-1" style="font-size:0.7rem;">Assigned</span>
+                                            <?php else: ?>
+                                                <span class="badge-neutral px-2 py-1" style="font-size:0.7rem;"><?= ucfirst(htmlspecialchars($p['status'])) ?></span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td style="padding:1rem 1.25rem; text-align:right;">
+                                            <form action="manage-posts.php" method="POST" class="d-inline" onsubmit="return confirm('WARNING: This will permanently delete this post and all associated applications. Are you sure?');">
+                                                <input type="hidden" name="delete_post_id" value="<?= $p['post_id'] ?>">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
-            <!-- Posts Table -->
-            <div class="table-custom table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>Subject &amp; Class</th>
-                            <th>Posted By</th>
-                            <th>Location</th>
-                            <th>Salary</th>
-                            <th>Applications</th>
-                            <th>Status</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="fw-semibold">Mathematics</div>
-                                <div class="text-muted small">Class 10 (SSC)</div>
-                            </td>
-                            <td>
-                                <div class="fw-semibold small">Saleh Sadid Mir</div>
-                                <div class="text-muted" style="font-size: 0.75rem;">Student</div>
-                            </td>
-                            <td class="text-muted small">Dhanmondi</td>
-                            <td class="fw-semibold">5,000 BDT</td>
-                            <td><span class="badge bg-secondary bg-opacity-10 text-secondary border px-2">12</span></td>
-                            <td><span class="badge-success">Open</span></td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post">View Post</button>
-                                <button class="btn btn-sm btn-outline-danger" title="Remove Post">Remove Post</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="fw-semibold">Physics</div>
-                                <div class="text-muted small">HSC 1st Year</div>
-                            </td>
-                            <td>
-                                <div class="fw-semibold small">Syed Ahmed</div>
-                                <div class="text-muted" style="font-size: 0.75rem;">Student</div>
-                            </td>
-                            <td class="text-muted small">Mirpur-10</td>
-                            <td class="fw-semibold">8,000 BDT</td>
-                            <td><span class="badge bg-secondary bg-opacity-10 text-secondary border px-2">7</span></td>
-                            <td><span class="badge-neutral">Assigned</span></td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post">View Post</button>
-                                <button class="btn btn-sm btn-outline-danger" title="Remove Post">Remove Post</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="fw-semibold">Chemistry</div>
-                                <div class="text-muted small">O Levels</div>
-                            </td>
-                            <td>
-                                <div class="fw-semibold small">Nadia Rahman</div>
-                                <div class="text-muted" style="font-size: 0.75rem;">Student</div>
-                            </td>
-                            <td class="text-muted small">Gulshan</td>
-                            <td class="fw-semibold">12,000 BDT</td>
-                            <td><span class="badge bg-secondary bg-opacity-10 text-secondary border px-2">3</span></td>
-                            <td><span class="badge-danger">Closed</span></td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post">View Post</button>
-                                <button class="btn btn-sm btn-outline-danger" title="Remove Post">Remove Post</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="fw-semibold">English Spoken</div>
-                                <div class="text-muted small">Professional</div>
-                            </td>
-                            <td>
-                                <div class="fw-semibold small">Amina Begum</div>
-                                <div class="text-muted" style="font-size: 0.75rem;">Student</div>
-                            </td>
-                            <td class="text-muted small">Uttara</td>
-                            <td class="fw-semibold">10,000 BDT</td>
-                            <td><span class="badge bg-secondary bg-opacity-10 text-secondary border px-2">18</span></td>
-                            <td><span class="badge-success">Open</span></td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1" title="View Post">View Post</button>
-                                <button class="btn btn-sm btn-outline-danger" title="Remove Post">Remove Post</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <nav class="mt-4">
-                <ul class="pagination justify-content-end mb-0">
-                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-            </nav>
 
         </div>
     </main>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
-
-

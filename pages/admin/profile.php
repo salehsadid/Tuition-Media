@@ -1,7 +1,17 @@
 <?php
-/**
- * SmartTutor - Admin Profile
- */
+require_once '../../includes/auth.php';
+requireAuth('admin');
+
+$db = Database::getInstance();
+$userId = $_SESSION['user_id'];
+
+$admin = $db->fetchOne("
+    SELECT u.email, a.full_name
+    FROM ST_USER u
+    JOIN ST_ADMIN a ON u.user_id = a.user_id
+    WHERE u.user_id = :u_id
+", ['u_id' => $userId]);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,23 +24,19 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/admin-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/admin-navbar.php'; ?>
-
         <div class="dashboard-content">
             <div class="row">
                 <div class="col-lg-7 mx-auto">
 
                     <div class="card card-custom overflow-hidden mb-4">
-                        <!-- Cover -->
                         <div style="height: 130px; background-color: var(--secondary-color);"></div>
 
                         <div class="card-body px-4 px-md-5 pb-5 position-relative">
-                            <img src="https://ui-avatars.com/api/?name=Admin&background=1E293B&color=fff&size=128"
+                            <img src="https://ui-avatars.com/api/?name=<?= urlencode($admin['full_name'] ?? 'Admin') ?>&background=1E293B&color=fff&size=128"
                                  alt="Admin Avatar"
                                  class="rounded-circle border border-4 border-white shadow-sm position-absolute"
                                  style="top: -64px; left: 2rem; width: 96px; height: 96px;">
@@ -41,7 +47,7 @@
                                 </a>
                             </div>
 
-                            <h4 class="fw-bold mb-1 mt-2">System Administrator</h4>
+                            <h4 class="fw-bold mb-1 mt-2"><?= htmlspecialchars($admin['full_name'] ?? 'System Administrator') ?></h4>
                             <p class="text-muted mb-4">SmartTutor Platform — Super Admin</p>
 
                             <hr class="my-4" style="border-color: #e2e8f0;">
@@ -49,25 +55,14 @@
                             <h6 class="fw-bold text-uppercase text-muted mb-4" style="font-size: 0.75rem; letter-spacing: 0.08em;">Contact Details</h6>
 
                             <div class="row g-4">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="d-flex align-items-center gap-3">
                                         <div class="p-2 rounded" style="background-color: #f1f5f9;">
                                             <i class="bi bi-envelope-fill text-secondary-custom fs-5"></i>
                                         </div>
                                         <div>
                                             <div class="text-muted small fw-semibold text-uppercase" style="font-size: 0.7rem;">Email</div>
-                                            <div class="fw-medium">admin@smarttutor.com</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="p-2 rounded" style="background-color: #f1f5f9;">
-                                            <i class="bi bi-telephone-fill text-secondary-custom fs-5"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-muted small fw-semibold text-uppercase" style="font-size: 0.7rem;">Phone</div>
-                                            <div class="fw-medium">+880 1700 000000</div>
+                                            <div class="fw-medium"><?= htmlspecialchars($admin['email']) ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -91,9 +86,7 @@
         </div>
     </main>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
-

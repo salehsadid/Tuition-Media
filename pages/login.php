@@ -15,17 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user && password_verify($password, $user['password_hash'])) {
             $requestedRole = $_POST['role'] ?? 'student';
             
-            // Enforce role restriction for student and tutor, allow admin unconditionally
-            if ($user['role'] !== 'admin' && $user['role'] !== $requestedRole) {
+            // Enforce role restriction for student and tutor. Block admin.
+            if ($user['role'] === 'admin') {
+                $error = "Admin accounts must log in via the Admin Login page.";
+            } else if ($user['role'] !== $requestedRole) {
                 $error = "This is not a " . ucfirst($requestedRole) . " account.";
             } else {
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['role'] = $user['role'];
     
                 // Redirect based on role
-                if ($user['role'] === 'admin') {
-                    header("Location: admin/dashboard.php");
-                } elseif ($user['role'] === 'tutor') {
+                if ($user['role'] === 'tutor') {
                     header("Location: tutor/dashboard.php");
                 } else {
                     header("Location: student/dashboard.php");
