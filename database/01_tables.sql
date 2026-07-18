@@ -1,19 +1,5 @@
--- Short forms:
-    -- uq - unique
-    -- ck -  check
-    -- ST - smart tutor
-    -- trg - trigger
-    -- seq - sequence
-    -- bi - before insert	
-    -- bu - before update	
-    -- bd - before delete	
-    -- ai - after insert	
-    -- au - after update	
-    -- ad - after delete
-
 BEGIN EXECUTE IMMEDIATE 'DROP TRIGGER trg_st_notification_bi';    EXCEPTION WHEN OTHERS THEN NULL; END;
 /
-
 BEGIN EXECUTE IMMEDIATE 'DROP TRIGGER trg_st_application_bi';      EXCEPTION WHEN OTHERS THEN NULL; END;
 /
 BEGIN EXECUTE IMMEDIATE 'DROP TRIGGER trg_st_tuition_post_bi';     EXCEPTION WHEN OTHERS THEN NULL; END;
@@ -30,10 +16,8 @@ BEGIN EXECUTE IMMEDIATE 'DROP TRIGGER trg_st_admin_bi';            EXCEPTION WHE
 /
 BEGIN EXECUTE IMMEDIATE 'DROP TRIGGER trg_st_user_bi';             EXCEPTION WHEN OTHERS THEN NULL; END;
 /
-
 BEGIN EXECUTE IMMEDIATE 'DROP TABLE ST_NOTIFICATION';      EXCEPTION WHEN OTHERS THEN NULL; END;
 /
-
 BEGIN EXECUTE IMMEDIATE 'DROP TABLE ST_APPLICATION';        EXCEPTION WHEN OTHERS THEN NULL; END;
 /
 BEGIN EXECUTE IMMEDIATE 'DROP TABLE ST_TUITION_POST';       EXCEPTION WHEN OTHERS THEN NULL; END;
@@ -50,10 +34,8 @@ BEGIN EXECUTE IMMEDIATE 'DROP TABLE ST_SUBJECT';            EXCEPTION WHEN OTHER
 /
 BEGIN EXECUTE IMMEDIATE 'DROP TABLE ST_USER';               EXCEPTION WHEN OTHERS THEN NULL; END;
 /
-
 BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE seq_st_notification';   EXCEPTION WHEN OTHERS THEN NULL; END;
 /
-
 BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE seq_st_application';    EXCEPTION WHEN OTHERS THEN NULL; END;
 /
 BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE seq_st_tuition_post';   EXCEPTION WHEN OTHERS THEN NULL; END;
@@ -70,8 +52,6 @@ BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE seq_st_admin';          EXCEPTION WHEN OT
 /
 BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE seq_st_user';           EXCEPTION WHEN OTHERS THEN NULL; END;
 /
-
-
 CREATE TABLE ST_USER (
     user_id       NUMBER          CONSTRAINT pk_st_user PRIMARY KEY,
     email         VARCHAR2(150)   NOT NULL,
@@ -83,9 +63,7 @@ CREATE TABLE ST_USER (
     CONSTRAINT ck_st_user_role    CHECK  (role IN ('admin','student','tutor')),
     CONSTRAINT ck_st_user_active  CHECK  (is_active IN (0,1))
 );
-
 CREATE SEQUENCE seq_st_user START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
 CREATE OR REPLACE TRIGGER trg_st_user_bi
 BEFORE INSERT ON ST_USER
 FOR EACH ROW
@@ -95,17 +73,13 @@ BEGIN
     END IF;
 END;
 /
-
-
 CREATE TABLE ST_ADMIN (
     admin_id   NUMBER        CONSTRAINT pk_st_admin PRIMARY KEY,
     user_id    NUMBER        NOT NULL,
     full_name  VARCHAR2(100) NOT NULL,
     CONSTRAINT uq_st_admin_user UNIQUE (user_id)
 );
-
 CREATE SEQUENCE seq_st_admin START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
 CREATE OR REPLACE TRIGGER trg_st_admin_bi
 BEFORE INSERT ON ST_ADMIN
 FOR EACH ROW
@@ -115,7 +89,6 @@ BEGIN
     END IF;
 END;
 /
-
 CREATE TABLE ST_STUDENT (
     student_id  NUMBER        CONSTRAINT pk_st_student PRIMARY KEY,
     user_id     NUMBER        NOT NULL,
@@ -125,9 +98,7 @@ CREATE TABLE ST_STUDENT (
     created_at  TIMESTAMP     DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT uq_st_student_user UNIQUE (user_id)
 );
-
 CREATE SEQUENCE seq_st_student START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
 CREATE OR REPLACE TRIGGER trg_st_student_bi
 BEFORE INSERT ON ST_STUDENT
 FOR EACH ROW
@@ -137,7 +108,6 @@ BEGIN
     END IF;
 END;
 /
-
 CREATE TABLE ST_TUTOR (
     tutor_id          NUMBER          CONSTRAINT pk_st_tutor PRIMARY KEY,
     user_id           NUMBER          NOT NULL,
@@ -155,9 +125,7 @@ CREATE TABLE ST_TUTOR (
     CONSTRAINT ck_st_tutor_cgpa      CHECK  (cgpa BETWEEN 0.00 AND 4.00),
     CONSTRAINT ck_st_tutor_verified  CHECK  (is_verified IN (0,1))
 );
-
 CREATE SEQUENCE seq_st_tutor START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
 CREATE OR REPLACE TRIGGER trg_st_tutor_bi
 BEFORE INSERT ON ST_TUTOR
 FOR EACH ROW
@@ -167,17 +135,12 @@ BEGIN
     END IF;
 END;
 /
-
-
-
 CREATE TABLE ST_SUBJECT (
     subject_id    NUMBER        CONSTRAINT pk_st_subject PRIMARY KEY,
     subject_name  VARCHAR2(100) NOT NULL,
     CONSTRAINT uq_st_subject_name UNIQUE (subject_name)
 );
-
 CREATE SEQUENCE seq_st_subject START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
 CREATE OR REPLACE TRIGGER trg_st_subject_bi
 BEFORE INSERT ON ST_SUBJECT
 FOR EACH ROW
@@ -187,18 +150,13 @@ BEGIN
     END IF;
 END;
 /
-
-
-
 CREATE TABLE ST_LOCATION (
     location_id  NUMBER        CONSTRAINT pk_st_location PRIMARY KEY,
     area_name    VARCHAR2(100) NOT NULL,
     district     VARCHAR2(100) DEFAULT 'Dhaka' NOT NULL,
     CONSTRAINT uq_st_location_area UNIQUE (area_name, district)
 );
-
 CREATE SEQUENCE seq_st_location START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
 CREATE OR REPLACE TRIGGER trg_st_location_bi
 BEFORE INSERT ON ST_LOCATION
 FOR EACH ROW
@@ -208,8 +166,6 @@ BEGIN
     END IF;
 END;
 /
-
-
 CREATE TABLE ST_TUITION_POST (
     post_id          NUMBER          CONSTRAINT pk_st_tuition_post PRIMARY KEY,
     student_id       NUMBER          NOT NULL,
@@ -226,9 +182,7 @@ CREATE TABLE ST_TUITION_POST (
     CONSTRAINT ck_st_post_days        CHECK (days_per_week BETWEEN 1 AND 7),
     CONSTRAINT ck_st_post_salary      CHECK (monthly_salary > 0)
 );
-
 CREATE SEQUENCE seq_st_tuition_post START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
 CREATE OR REPLACE TRIGGER trg_st_tuition_post_bi
 BEFORE INSERT ON ST_TUITION_POST
 FOR EACH ROW
@@ -238,8 +192,6 @@ BEGIN
     END IF;
 END;
 /
-
-
 CREATE TABLE ST_APPLICATION (
     application_id  NUMBER          CONSTRAINT pk_st_application PRIMARY KEY,
     post_id         NUMBER          NOT NULL,
@@ -250,9 +202,7 @@ CREATE TABLE ST_APPLICATION (
     CONSTRAINT uq_st_application      UNIQUE (post_id, tutor_id),
     CONSTRAINT ck_st_application_status CHECK (status IN ('pending','accepted','rejected'))
 );
-
 CREATE SEQUENCE seq_st_application START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
 CREATE OR REPLACE TRIGGER trg_st_application_bi
 BEFORE INSERT ON ST_APPLICATION
 FOR EACH ROW
@@ -262,10 +212,6 @@ BEGIN
     END IF;
 END;
 /
-
-
-
-
 CREATE TABLE ST_NOTIFICATION (
     notification_id  NUMBER         CONSTRAINT pk_st_notification PRIMARY KEY,
     user_id          NUMBER         NOT NULL,
@@ -275,9 +221,7 @@ CREATE TABLE ST_NOTIFICATION (
     created_at       TIMESTAMP      DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT ck_st_notification_read CHECK (is_read IN (0,1))
 );
-
 CREATE SEQUENCE seq_st_notification START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
 CREATE OR REPLACE TRIGGER trg_st_notification_bi
 BEFORE INSERT ON ST_NOTIFICATION
 FOR EACH ROW
@@ -287,10 +231,7 @@ BEGIN
     END IF;
 END;
 /
-
 COMMIT;
-
-
 SELECT table_name, num_rows
 FROM   user_tables
 WHERE  table_name LIKE 'ST_%'

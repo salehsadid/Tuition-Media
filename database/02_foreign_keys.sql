@@ -3,56 +3,45 @@ ALTER TABLE ST_ADMIN
     FOREIGN KEY (user_id)
     REFERENCES ST_USER (user_id)
     ON DELETE CASCADE;
-
 ALTER TABLE ST_STUDENT
     ADD CONSTRAINT fk_student_user
     FOREIGN KEY (user_id)
     REFERENCES ST_USER (user_id)
     ON DELETE CASCADE;
-
 ALTER TABLE ST_TUTOR
     ADD CONSTRAINT fk_tutor_user
     FOREIGN KEY (user_id)
     REFERENCES ST_USER (user_id)
     ON DELETE CASCADE;
-
 ALTER TABLE ST_TUITION_POST
     ADD CONSTRAINT fk_post_student
     FOREIGN KEY (student_id)
     REFERENCES ST_STUDENT (student_id);
-
 ALTER TABLE ST_TUITION_POST
     ADD CONSTRAINT fk_post_subject
     FOREIGN KEY (subject_id)
     REFERENCES ST_SUBJECT (subject_id);
-
 ALTER TABLE ST_TUITION_POST
     ADD CONSTRAINT fk_post_location
     FOREIGN KEY (location_id)
     REFERENCES ST_LOCATION (location_id);
-
 ALTER TABLE ST_APPLICATION
     ADD CONSTRAINT fk_application_post
     FOREIGN KEY (post_id)
     REFERENCES ST_TUITION_POST (post_id)
     ON DELETE CASCADE;
-
 ALTER TABLE ST_APPLICATION
     ADD CONSTRAINT fk_application_tutor
     FOREIGN KEY (tutor_id)
     REFERENCES ST_TUTOR (tutor_id)
     ON DELETE CASCADE;
-
 ALTER TABLE ST_TUITION_POST
     ADD CONSTRAINT fk_post_hired_tutor
     FOREIGN KEY (hired_tutor_id)
     REFERENCES ST_TUTOR (tutor_id)
     ON DELETE SET NULL;
-
 ALTER TABLE ST_NOTIFICATION
     ADD CONSTRAINT fk_notification_user
     FOREIGN KEY (user_id)
     REFERENCES ST_USER (user_id)
     ON DELETE CASCADE;
-
-
