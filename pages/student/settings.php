@@ -1,19 +1,14 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('student');
-
-
-
 $db = Database::getInstance();
 $userId = $_SESSION['user_id'];
 $success = '';
 $error = '';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullName = $_POST['full_name'] ?? '';
     $phone = $_POST['phone'] ?? '';
     $address = $_POST['address'] ?? '';
-    
     try {
         $db->execute("UPDATE ST_STUDENT SET full_name = :fname, phone = :phone, address = :addr WHERE user_id = :u_id", [
             'fname' => $fullName,
@@ -27,14 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Update failed: " . $e->getMessage();
     }
 }
-
-// Fetch current details
 $student = $db->fetchOne("
     SELECT u.email, s.* 
     FROM ST_USER u 
     JOIN ST_STUDENT s ON u.user_id = s.user_id 
     WHERE u.user_id = :u_id", ['u_id' => $userId]);
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,19 +38,14 @@ $student = $db->fetchOne("
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/student-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/student-navbar.php'; ?>
-
         <div class="dashboard-content">
             <h4 class="fw-bold mb-4">Settings</h4>
-            
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-
             <div class="card card-custom">
                 <div class="card-body p-4">
                     <form method="POST" action="settings.php">
@@ -82,11 +69,8 @@ $student = $db->fetchOne("
                     </form>
                 </div>
             </div>
-            
         </div>
     </main>
 </div>
-
 </body>
 </html>
-

@@ -1,26 +1,19 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('tutor');
-
 $db = Database::getInstance();
 $userId = $_SESSION['user_id'];
-
-// Get tutor_id
 $tutorRow = $db->fetchOne("SELECT tutor_id FROM ST_TUTOR WHERE user_id = :u_id", ['u_id' => $userId]);
 $tutorId = $tutorRow ? $tutorRow['tutor_id'] : 0;
-
-// Handle Withdrawal
 $success = '';
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['withdraw_app_id'])) {
     $appId = (int)$_POST['withdraw_app_id'];
     try {
-        // Ensure this application belongs to the tutor
         $app = $db->fetchOne("SELECT status FROM ST_APPLICATION WHERE application_id = :app_id AND tutor_id = :t_id", [
             'app_id' => $appId,
             't_id' => $tutorId
         ]);
-        
         if ($app) {
             if ($app['status'] === 'pending') {
                 $db->execute("DELETE FROM ST_APPLICATION WHERE application_id = :app_id", ['app_id' => $appId]);
@@ -34,24 +27,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['withdraw_app_id'])) {
         $error = "Failed to withdraw application.";
     }
 }
-
 $search = trim($_GET['search'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
-
 $whereClause = "a.tutor_id = :tid";
 $params = ['tid' => $tutorId];
-
 if ($search !== '') {
     $whereClause .= " AND (LOWER(s.subject_name) LIKE :search OR LOWER(st.full_name) LIKE :search)";
     $params['search'] = '%' . strtolower($search) . '%';
 }
-
 if ($statusFilter !== '') {
     $whereClause .= " AND a.status = :status";
     $params['status'] = $statusFilter;
 }
-
-// Fetch applications
 $applications = $db->fetchAll("
     SELECT 
         a.application_id,
@@ -71,10 +58,6 @@ $applications = $db->fetchAll("
     WHERE $whereClause
     ORDER BY a.applied_at DESC
 ", $params);
-
-/**
- * SmartTutor - Tutor Applied Jobs
- */
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,15 +75,12 @@ $applications = $db->fetchAll("
     <main class="dashboard-main">
         <?php include '../../includes/tutor-navbar.php'; ?>
         <div class="dashboard-content">
-
             <div class="page-header d-flex justify-content-between align-items-center">
                 <h3>My Applications</h3>
                 <a href="browse-tuition.php" class="btn btn-brand">
                     Find Jobs
                 </a>
             </div>
-
-            <!-- Search and Filter Form -->
             <form method="GET" action="applied-jobs.php" class="card card-custom p-3 mb-4">
                 <div class="row g-3">
                     <div class="col-md-5">
@@ -122,10 +102,8 @@ $applications = $db->fetchAll("
                     </div>
                 </div>
             </form>
-
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-
             <div class="card-custom p-0">
                 <div class="table-responsive">
                     <table class="table align-middle mb-0" style="font-size:0.875rem;">
@@ -181,7 +159,6 @@ $applications = $db->fetchAll("
                     </table>
                 </div>
             </div>
-
         </div>
     </main>
 </div>

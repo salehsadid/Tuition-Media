@@ -1,5 +1,4 @@
 <?php 
-/* SmartTutor - Student Dashboard Navbar */ 
 $navDb = Database::getInstance();
 $studentNavNotifs = $navDb->fetchAll("SELECT * FROM (SELECT title, message FROM ST_NOTIFICATION WHERE target_role = 'student' AND user_id = :u_id ORDER BY created_at DESC) WHERE ROWNUM <= 5", ['u_id' => $_SESSION['user_id']]);
 $studentUnreadCount = $navDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIFICATION WHERE target_role = 'student' AND user_id = :u_id AND is_read = 0", ['u_id' => $_SESSION['user_id']])['cnt'] ?? 0;
@@ -11,7 +10,6 @@ $studentUnreadCount = $navDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIFICAT
         </button>
         <h6 class="mb-0 d-none d-sm-block" style="font-weight:600; color:var(--text-muted); font-size:0.875rem;">Student Dashboard</h6>
     </div>
-
     <div class="d-flex align-items-center gap-2">
         <div class="dropdown">
             <button class="btn btn-neutral btn-sm position-relative" style="width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;" type="button" data-bs-toggle="dropdown">
@@ -37,7 +35,6 @@ $studentUnreadCount = $navDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIFICAT
                 <li><a class="dropdown-item text-center" href="notifications.php" style="font-size:0.8125rem; font-weight:600; color:var(--p-500);">View all notifications</a></li>
             </ul>
         </div>
-
         <div class="dropdown">
             <button class="btn border-0 p-0 d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
                 <img src="https://ui-avatars.com/api/?name=<?= urlencode(getLoggedInUserName()) ?>&background=1A56DB&color=fff&size=64" class="rounded-circle" width="34" height="34" style="border:2px solid var(--border-subtle);">
@@ -55,4 +52,3 @@ $studentUnreadCount = $navDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIFICAT
         </div>
     </div>
 </header>
-

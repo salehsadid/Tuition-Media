@@ -12,7 +12,6 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
         <button type="button" class="btn-close btn-close-white d-lg-none ms-auto" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu"></button>
     </div>
     <div class="offcanvas-body flex-column p-0 d-flex" style="background:var(--gray-900);">
-        <!-- Role badge -->
         <div class="px-3 pt-3 pb-1">
             <span style="display:block; font-size:0.6875rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.3); padding:0 0.5rem 0.25rem;">Student Panel</span>
         </div>
@@ -23,7 +22,6 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
                     <i class="bi bi-grid-1x2"></i> Dashboard
                 </a>
             </li>
-
             <span class="sidebar-section-label">Tuition Management</span>
             <li>
                 <a href="create-tuition.php" class="sidebar-link <?= $current_page=='create-tuition.php' ? 'active' : '' ?>">
@@ -40,8 +38,6 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
                     <i class="bi bi-file-earmark-person"></i> Applications
                 </a>
             </li>
-
-
             <span class="sidebar-section-label">Communication</span>
             <li>
                 <a href="notifications.php" class="sidebar-link <?= $current_page=='notifications.php' ? 'active' : '' ?>">
@@ -51,14 +47,12 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
                     <?php endif; ?>
                 </a>
             </li>
-
             <span class="sidebar-section-label">Account</span>
             <li>
                 <a href="profile.php" class="sidebar-link <?= $current_page=='profile.php' ? 'active' : '' ?>">
                     <i class="bi bi-person-circle"></i> Profile
                 </a>
             </li>
-
             <li style="margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid rgba(255,255,255,0.07);">
                 <a href="../logout.php" class="sidebar-link" style="color:rgba(248,113,113,0.8);">
                    Logout
@@ -67,4 +61,3 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
         </ul>
     </div>
 </div>
-

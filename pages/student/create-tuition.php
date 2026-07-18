@@ -1,17 +1,12 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('student');
-
-
 $db = Database::getInstance();
 $userId = $_SESSION['user_id'];
 $success = '';
 $error = '';
-
-// Fetch student_id
 $studentRow = $db->fetchOne("SELECT student_id FROM ST_STUDENT WHERE user_id = :u_id", ['u_id' => $userId]);
 $studentId = $studentRow ? $studentRow['student_id'] : null;
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$studentId) {
         $error = "Student profile not found.";
@@ -22,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $daysPerWeek = $_POST['days_per_week'] ?? '';
         $monthlySalary = $_POST['monthly_salary'] ?? '';
         $additionalInfo = $_POST['additional_info'] ?? '';
-        
         try {
             $db->execute(
                 "INSERT INTO ST_TUITION_POST (student_id, subject_id, location_id, class_level, days_per_week, monthly_salary, additional_info, status) 
@@ -44,11 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-
-// Fetch lookups
 $subjects = $db->fetchAll("SELECT * FROM ST_SUBJECT ORDER BY subject_name");
 $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_name");
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,24 +52,17 @@ $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_na
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/student-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/student-navbar.php'; ?>
-
         <div class="dashboard-content">
             <h3 class="fw-bold mb-4">Post a New Tuition Job</h3>
-            
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-
             <div class="card card-custom p-4 p-md-5">
                 <form action="create-tuition.php" method="POST">
-                    
                     <div class="row g-4">
-                        <!-- Subject -->
                         <div class="col-md-6">
                             <label class="form-label fw-bold text-secondary-custom">Subject</label>
                             <select name="subject_id" class="form-select form-control-lg bg-light border-0" required>
@@ -88,14 +72,10 @@ $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_na
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        
-                        <!-- Class/Level -->
                         <div class="col-md-6">
                             <label class="form-label fw-bold text-secondary-custom">Class / Academic Level</label>
                             <input type="text" name="class_level" class="form-control form-control-lg bg-light border-0" placeholder="e.g. Class 10, HSC 1st Year" required>
                         </div>
-
-                        <!-- Days per week -->
                         <div class="col-md-4">
                             <label class="form-label fw-bold text-secondary-custom">Days Per Week</label>
                             <select name="days_per_week" class="form-select form-control-lg bg-light border-0" required>
@@ -108,14 +88,10 @@ $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_na
                                 <option value="7">7 Days</option>
                             </select>
                         </div>
-
-                        <!-- Salary -->
                         <div class="col-md-4">
                             <label class="form-label fw-bold text-secondary-custom">Monthly Salary (BDT)</label>
                             <input type="number" name="monthly_salary" min="1" class="form-control form-control-lg bg-light border-0" placeholder="e.g. 5000" required>
                         </div>
-
-                        <!-- Location -->
                         <div class="col-md-4">
                             <label class="form-label fw-bold text-secondary-custom">Location / Area</label>
                             <select name="location_id" class="form-select form-control-lg bg-light border-0" required>
@@ -125,16 +101,12 @@ $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_na
                                 <?php endforeach; ?>
                             </select>
                         </div>
-
-                        <!-- Description -->
                         <div class="col-12">
                             <label class="form-label fw-bold text-secondary-custom">Additional Requirements / Details</label>
                             <textarea name="additional_info" class="form-control bg-light border-0" rows="5" placeholder="Specify any specific requirements, timing preferences, or student's current standing..."></textarea>
                         </div>
                     </div>
-
                     <hr class="my-5 border-secondary border-opacity-25">
-
                     <div class="d-flex justify-content-end gap-3">
                         <button type="reset" class="btn btn-outline-secondary px-4 fw-bold">Clear Form</button>
                         <button type="submit" class="btn btn-brand px-5">
@@ -146,9 +118,7 @@ $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_na
         </div>
     </main>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
-

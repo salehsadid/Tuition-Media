@@ -1,14 +1,10 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('tutor');
-
-
-
 $db = Database::getInstance();
 $userId = $_SESSION['user_id'];
 $success = '';
 $error = '';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullName = $_POST['full_name'] ?? '';
     $phone = $_POST['phone'] ?? '';
@@ -21,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $salary = $_POST['expected_salary'] ?? null;
     if ($salary === '') $salary = null;
     $areas = $_POST['preferred_areas'] ?? '';
-    
     try {
         $db->execute("UPDATE ST_TUTOR SET full_name = :fname, phone = :phone, university = :uni, department = :dept, cgpa = :cgpa, experience_years = :exp, expected_salary = :sal, preferred_areas = :areas WHERE user_id = :u_id", [
             'fname' => $fullName,
@@ -40,14 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Update failed: " . $e->getMessage();
     }
 }
-
-// Fetch current details
 $tutor = $db->fetchOne("
     SELECT u.email, t.* 
     FROM ST_USER u 
     JOIN ST_TUTOR t ON u.user_id = t.user_id 
     WHERE u.user_id = :u_id", ['u_id' => $userId]);
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,19 +51,14 @@ $tutor = $db->fetchOne("
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/tutor-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/tutor-navbar.php'; ?>
-
         <div class="dashboard-content">
             <h4 class="fw-bold mb-4">Settings</h4>
-            
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-
             <div class="card card-custom">
                 <div class="card-body p-4">
                     <form method="POST" action="settings.php">
@@ -117,11 +104,8 @@ $tutor = $db->fetchOne("
                     </form>
                 </div>
             </div>
-            
         </div>
     </main>
 </div>
-
 </body>
 </html>
-

@@ -1,5 +1,4 @@
 <?php 
-/* SmartTutor - Admin Dashboard Navbar */ 
 $navDb = Database::getInstance();
 $adminNavNotifs = $navDb->fetchAll("SELECT * FROM (SELECT title, message FROM ST_NOTIFICATION WHERE target_role = 'admin' ORDER BY created_at DESC) WHERE ROWNUM <= 5");
 $adminUnreadCount = $navDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIFICATION WHERE target_role = 'admin' AND is_read = 0")['cnt'] ?? 0;
@@ -11,7 +10,6 @@ $adminUnreadCount = $navDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIFICATIO
         </button>
         <h6 class="mb-0 d-none d-sm-block" style="font-weight:600; color:var(--text-muted); font-size:0.875rem;">Admin Control Panel</h6>
     </div>
-
     <div class="d-flex align-items-center gap-2">
         <div class="dropdown">
             <button class="btn btn-neutral btn-sm position-relative" style="width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;" type="button" data-bs-toggle="dropdown">
@@ -37,7 +35,6 @@ $adminUnreadCount = $navDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIFICATIO
                 <li><a class="dropdown-item text-center" href="notifications.php" style="font-size:0.8125rem; font-weight:600; color:var(--p-500);">View all alerts</a></li>
             </ul>
         </div>
-
         <div class="dropdown">
             <button class="btn border-0 p-0 d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
                 <img src="https://ui-avatars.com/api/?name=Admin&background=1F2937&color=fff&size=64" class="rounded-circle" width="34" height="34" style="border:2px solid var(--border-subtle);">
@@ -55,4 +52,3 @@ $adminUnreadCount = $navDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIFICATIO
         </div>
     </div>
 </header>
-

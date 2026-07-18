@@ -1,15 +1,11 @@
 <?php
 require_once '../../includes/auth.php';
 requireAdminAuth();
-
 $db = Database::getInstance();
 $success = '';
 $error = '';
-
-// Handle Add/Edit/Delete
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
-    
     try {
         if ($action === 'add') {
             $area = trim($_POST['area_name']);
@@ -56,10 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-
-// Fetch all locations
 $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_name");
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,13 +65,10 @@ $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_na
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/admin-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/admin-navbar.php'; ?>
-
         <div class="dashboard-content">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold mb-0">Manage Locations</h3>
@@ -86,10 +76,8 @@ $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_na
                     Add Location
                 </button>
             </div>
-
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-
             <div class="card card-custom p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
@@ -118,8 +106,6 @@ $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_na
                                         </form>
                                     </td>
                                 </tr>
-
-                                <!-- Edit Modal for this row -->
                                 <div class="modal fade" id="editLocationModal<?= $loc['location_id'] ?>" tabindex="-1">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -156,8 +142,6 @@ $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_na
         </div>
     </main>
 </div>
-
-<!-- Add Location Modal -->
 <div class="modal fade" id="addLocationModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -185,7 +169,6 @@ $locations = $db->fetchAll("SELECT * FROM ST_LOCATION ORDER BY district, area_na
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>

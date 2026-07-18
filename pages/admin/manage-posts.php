@@ -1,19 +1,13 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('admin');
-
 $db = Database::getInstance();
 $success = '';
 $error = '';
-
-// Handle Delete Post Action
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_post_id'])) {
     $deleteId = (int)$_POST['delete_post_id'];
-    
     try {
-        // Delete applications associated with the post first
         $db->execute("DELETE FROM ST_APPLICATION WHERE post_id = :pid", ['pid' => $deleteId]);
-        // Delete the post
         $db->execute("DELETE FROM ST_TUITION_POST WHERE post_id = :pid", ['pid' => $deleteId]);
         $db->execute("COMMIT");
         $success = "Post completely deleted.";
@@ -21,24 +15,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_post_id'])) {
         $error = "Failed to delete post: " . $e->getMessage();
     }
 }
-
 $search = trim($_GET['search'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
-
 $whereClause = "1=1";
 $params = [];
-
 if ($search !== '') {
     $whereClause .= " AND (LOWER(s.subject_name) LIKE :search OR LOWER(st.full_name) LIKE :search)";
     $params['search'] = '%' . strtolower($search) . '%';
 }
-
 if ($statusFilter !== '') {
     $whereClause .= " AND p.status = :status";
     $params['status'] = $statusFilter;
 }
-
-// Fetch all posts
 $posts = $db->fetchAll("
     SELECT 
         p.post_id,
@@ -76,12 +64,9 @@ $posts = $db->fetchAll("
     <main class="dashboard-main">
         <?php include '../../includes/admin-navbar.php'; ?>
         <div class="dashboard-content">
-
             <div class="page-header d-flex justify-content-between align-items-center mb-4">
                 <h3>Manage Tuition Posts</h3>
             </div>
-            
-            <!-- Search and Filter Form -->
             <form method="GET" action="manage-posts.php" class="card card-custom p-3 mb-4">
                 <div class="row g-3">
                     <div class="col-md-5">
@@ -103,10 +88,8 @@ $posts = $db->fetchAll("
                     </div>
                 </div>
             </form>
-            
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-
             <div class="card-custom p-0">
                 <div class="table-responsive">
                     <table class="table align-middle mb-0" style="font-size:0.875rem;">
@@ -159,7 +142,6 @@ $posts = $db->fetchAll("
                     </table>
                 </div>
             </div>
-
         </div>
     </main>
 </div>

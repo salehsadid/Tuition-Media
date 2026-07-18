@@ -1,41 +1,30 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('student');
-
 $db = Database::getInstance();
 $userId = $_SESSION['user_id'];
 $success = '';
 $error = '';
-
-// Get student_id
 $studentRow = $db->fetchOne("SELECT student_id FROM ST_STUDENT WHERE user_id = :u_id", ['u_id' => $userId]);
 $studentId = $studentRow ? $studentRow['student_id'] : 0;
-
-// Handle Accept/Reject Actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && isset($_POST['app_id'])) {
     $appId = (int)$_POST['app_id'];
     $action = $_POST['action'];
-
     try {
-        // Verify this application belongs to one of the student's posts
         $app = $db->fetchOne("
             SELECT a.application_id, a.post_id, a.status, a.tutor_id 
             FROM ST_APPLICATION a 
             JOIN ST_TUITION_POST p ON a.post_id = p.post_id 
             WHERE a.application_id = :aid AND p.student_id = :sid
         ", ['aid' => $appId, 'sid' => $studentId]);
-
         if ($app) {
             if ($action === 'accept') {
-                // Call the Oracle PL/SQL Procedure to handle hiring safely
                 $db->execute("BEGIN PROC_HIRE_TUTOR(:pid, :tid); END;", [
                     'pid' => $app['post_id'],
                     'tid' => $app['tutor_id']
                 ]);
-                
                 $success = "Application accepted! The connection has been established.";
             } elseif ($action === 'reject') {
-                // Remove the application from the table completely
                 $db->execute("DELETE FROM ST_APPLICATION WHERE application_id = :aid", ['aid' => $appId]);
                 $db->execute("COMMIT");
                 $success = "Application rejected and removed.";
@@ -47,24 +36,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && isset($_
         $error = "Failed to update application status.";
     }
 }
-
 $search = trim($_GET['search'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
-
 $whereClause = "p.student_id = :sid";
 $params = ['sid' => $studentId];
-
 if ($search !== '') {
     $whereClause .= " AND LOWER(t.full_name) LIKE :search";
     $params['search'] = '%' . strtolower($search) . '%';
 }
-
 if ($statusFilter !== '') {
     $whereClause .= " AND a.status = :status";
     $params['status'] = $statusFilter;
 }
-
-// Fetch applications
 $applications = $db->fetchAll("
     SELECT 
         a.application_id,
@@ -82,10 +65,6 @@ $applications = $db->fetchAll("
     WHERE $whereClause
     ORDER BY a.applied_at DESC
 ", $params);
-
-/**
- * SmartTutor - Applications Received (Student)
- */
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,17 +77,12 @@ $applications = $db->fetchAll("
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/student-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/student-navbar.php'; ?>
-
         <div class="dashboard-content">
             <h3 class="fw-bold mb-4">Application History</h3>
-
-            <!-- Search and Filter Form -->
             <form method="GET" action="applications.php" class="card card-custom p-3 mb-4">
                 <div class="row g-3">
                     <div class="col-md-5">
@@ -130,11 +104,8 @@ $applications = $db->fetchAll("
                     </div>
                 </div>
             </form>
-
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-
-            <!-- Table -->
             <div class="table-custom table-responsive card-custom p-0">
                 <table class="table table-hover align-middle mb-0">
                     <thead>
@@ -200,11 +171,9 @@ $applications = $db->fetchAll("
                     </tbody>
                 </table>
             </div>
-            
         </div>
     </main>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>

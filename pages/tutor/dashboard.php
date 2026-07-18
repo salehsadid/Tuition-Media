@@ -1,24 +1,13 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('tutor');
-
 $db = Database::getInstance();
 $userId = $_SESSION['user_id'];
-
-// Get tutor_id
 $tutorRow = $db->fetchOne("SELECT tutor_id FROM ST_TUTOR WHERE user_id = :u_id", ['u_id' => $userId]);
 $tutorId = $tutorRow ? $tutorRow['tutor_id'] : 0;
-
-// Active Tuitions (assigned applications)
 $activeTuitions = $db->fetchOne("SELECT COUNT(*) as cnt FROM ST_APPLICATION WHERE tutor_id = :tid AND status = 'accepted'", ['tid' => $tutorId])['cnt'];
-
-// Pending Applications
 $pendingApps = $db->fetchOne("SELECT COUNT(*) as cnt FROM ST_APPLICATION WHERE tutor_id = :tid AND status = 'pending'", ['tid' => $tutorId])['cnt'];
-
-// Total Applications
 $totalApps = $db->fetchOne("SELECT COUNT(*) as cnt FROM ST_APPLICATION WHERE tutor_id = :tid", ['tid' => $tutorId])['cnt'];
-
-// Recent Applications (Last 5)
 $recentActivity = $db->fetchAll("
     SELECT * FROM (
         SELECT 
@@ -33,10 +22,6 @@ $recentActivity = $db->fetchAll("
         ORDER BY a.applied_at DESC
     ) WHERE ROWNUM <= 5
 ", ['tid' => $tutorId]);
-
-/**
- * SmartTutor - Tutor Dashboard Overview
- */
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,15 +39,12 @@ $recentActivity = $db->fetchAll("
     <main class="dashboard-main">
         <?php include '../../includes/tutor-navbar.php'; ?>
         <div class="dashboard-content">
-
             <div class="page-header">
                 <h3>Dashboard Overview</h3>
                 <a href="browse-tuition.php" class="btn btn-brand">
                     Find Jobs
                 </a>
             </div>
-
-            <!-- Stat Cards -->
             <div class="row g-4 mb-4">
                 <div class="col-sm-6 col-xl-4">
                     <div class="stat-card">
@@ -101,8 +83,6 @@ $recentActivity = $db->fetchAll("
                     </div>
                 </div>
             </div>
-
-            <!-- Activity -->
             <div class="row g-4">
                 <div class="col-12">
                     <div class="card-custom p-4 h-100">
@@ -110,7 +90,6 @@ $recentActivity = $db->fetchAll("
                             <h6 style="font-weight:700; color:var(--text-primary); margin:0;">Recent Applications</h6>
                             <a href="applied-jobs.php" style="font-size:0.8125rem; font-weight:600; color:var(--p-500); text-decoration:none;">View all</a>
                         </div>
-                        
                         <?php if (empty($recentActivity)): ?>
                             <div class="text-center py-4 text-muted small">No recent applications found.</div>
                         <?php else: ?>
@@ -134,7 +113,6 @@ $recentActivity = $db->fetchAll("
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
 </div>

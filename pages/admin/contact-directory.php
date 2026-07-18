@@ -1,10 +1,7 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('admin');
-
 $db = Database::getInstance();
-
-// Fetch combined list of students and tutors using UNION ALL
 $contacts = $db->fetchAll("
     SELECT full_name, phone, u.email, 'Student' AS user_role
     FROM ST_STUDENT s JOIN ST_USER u ON s.user_id = u.user_id
@@ -26,7 +23,6 @@ $contacts = $db->fetchAll("
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/admin-sidebar.php'; ?>
     <main class="dashboard-main">
@@ -35,7 +31,6 @@ $contacts = $db->fetchAll("
                 <div class="page-header d-flex justify-content-between align-items-center mb-4">
                     <h3>Contact Directory</h3>
                 </div>
-
                 <div class="card card-custom p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">

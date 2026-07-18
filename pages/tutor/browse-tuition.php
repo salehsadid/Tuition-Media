@@ -1,27 +1,19 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('tutor');
-
-
 $db = Database::getInstance();
-
 $search = trim($_GET['search'] ?? '');
 $district = trim($_GET['district'] ?? '');
-
 $whereClause = "1=1";
 $params = [];
-
 if ($search !== '') {
     $whereClause .= " AND (LOWER(subject_name) LIKE :search OR LOWER(class_level) LIKE :search OR LOWER(area_name) LIKE :search)";
     $params['search'] = '%' . strtolower($search) . '%';
 }
-
 if ($district !== '') {
     $whereClause .= " AND district = :district";
     $params['district'] = $district;
 }
-
-// Fetching directly from the Oracle View instead of doing JOINS here
 $posts = $db->fetchAll("
     SELECT 
         post_id,
@@ -36,13 +28,7 @@ $posts = $db->fetchAll("
     WHERE $whereClause
     ORDER BY created_at DESC
 ", $params);
-
-// Fetch distinct districts for filter
 $districts = $db->fetchAll("SELECT DISTINCT district FROM ST_LOCATION ORDER BY district");
-
-/**
- * Helper to calculate time ago
- */
 function timeElapsedString($datetime, $full = false) {
     $now = new DateTime;
     $ago = new DateTime($datetime);
@@ -84,17 +70,12 @@ function timeElapsedString($datetime, $full = false) {
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/tutor-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/tutor-navbar.php'; ?>
-
         <div class="dashboard-content">
             <h3 class="fw-bold mb-4">Browse Tuition Jobs</h3>
-
-            <!-- Search and Filter Form -->
             <form method="GET" action="browse-tuition.php" class="card card-custom p-3 mb-4">
                 <div class="row g-3">
                     <div class="col-md-5">
@@ -118,8 +99,6 @@ function timeElapsedString($datetime, $full = false) {
                     </div>
                 </div>
             </form>
-
-            <!-- Job Cards Grid -->
             <div class="row g-4">
                 <?php if (empty($posts)): ?>
                     <div class="col-12 text-center py-5">
@@ -137,7 +116,6 @@ function timeElapsedString($datetime, $full = false) {
                                     </div>
                                     <h5 class="fw-bold text-success mb-0"><?= htmlspecialchars($post['monthly_salary']) ?>৳<small class="text-muted fw-normal" style="font-size: 0.7rem;">/mo</small></h5>
                                 </div>
-                                
                                 <div class="mb-4">
                                     <div class="d-flex align-items-center mb-2 text-muted small">
                                         <i class="bi bi-geo-alt-fill me-2 text-danger"></i> <?= htmlspecialchars($post['area_name'] . ', ' . $post['district']) ?>
@@ -146,7 +124,6 @@ function timeElapsedString($datetime, $full = false) {
                                         <i class="bi bi-calendar3 me-2 text-primary"></i> <?= (int)$post['days_per_week'] ?> Days / Week
                                     </div>
                                 </div>
-
                                 <div class="mt-auto d-flex justify-content-between align-items-center">
                                     <small class="text-muted">Posted <?= timeElapsedString($post['created_at']) ?></small>
                                     <a href="tuition-details.php?id=<?= $post['post_id'] ?>" class="btn btn-sm btn-outline-custom fw-bold">View Details</a>
@@ -159,7 +136,6 @@ function timeElapsedString($datetime, $full = false) {
         </div>
     </main>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>

@@ -1,5 +1,4 @@
 <?php
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,18 +6,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartTutor</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-
 <?php include '../includes/navbar.php'; ?>
-
-<!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
         <div class="row align-items-center">
@@ -43,14 +36,11 @@
                 </div>
             </div>
             <div class="col-lg-6 text-center">
-                <!-- Using a generic placeholder image from unDraw style sources -->
                 <img src="https://illustrations.popsy.co/blue/student-going-to-school.svg" alt="Education Illustration" class="img-fluid rounded" style="max-height: 450px;">
             </div>
         </div>
     </div>
 </section>
-
-<!-- Statistics Section -->
 <section class="py-5 bg-white border-bottom">
     <div class="container">
         <div class="row text-center g-4">
@@ -69,8 +59,6 @@
         </div>
     </div>
 </section>
-
-<!-- Features Section -->
 <section class="py-5 my-5">
     <div class="container">
         <div class="text-center mb-5">
@@ -117,8 +105,6 @@
         </div>
     </div>
 </section>
-
-<!-- How It Works Section -->
 <section class="py-5 bg-white border-top border-bottom">
     <div class="container py-4">
         <div class="text-center mb-5">
@@ -126,9 +112,7 @@
             <p class="text-muted">A simple 3-step process to start your learning journey.</p>
         </div>
         <div class="row text-center position-relative">
-            <!-- Connecting Line (Desktop Only) -->
             <div class="d-none d-md-block position-absolute top-50 start-50 translate-middle w-75" style="height: 2px; background-color: #e2e8f0; z-index: 0;"></div>
-            
             <div class="col-md-4 mb-4 mb-md-0 position-relative" style="z-index: 1;">
                 <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow" style="width: 80px; height: 80px; font-size: 2rem; font-weight: bold;">1</div>
                 <h5 class="fw-bold">Post Tuition</h5>
@@ -147,8 +131,6 @@
         </div>
     </div>
 </section>
-
-<!-- Testimonials Section -->
 <section class="py-5 my-5">
     <div class="container">
         <div class="text-center mb-5">
@@ -188,8 +170,6 @@
         </div>
     </div>
 </section>
-
-<!-- FAQ Section -->
 <section class="py-5 bg-white border-top">
     <div class="container py-4">
         <div class="row justify-content-center">
@@ -239,7 +219,4 @@
         </div>
     </div>
 </section>
-
-
 <?php include '../includes/footer.php'; ?>
-

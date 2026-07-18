@@ -1,12 +1,8 @@
 <?php
-/**
- * SmartTutor - Reusable Footer Include
- */
 ?>
 <footer class="footer-custom mt-auto">
     <div class="container">
         <div class="row gy-4">
-            <!-- Brand & Info -->
             <div class="col-lg-4 col-md-6">
                 <a class="navbar-brand d-flex align-items-center text-white mb-3" href="/pages/index.php">
                     <i class="bi bi-mortarboard-fill me-2 fs-3 text-accent"></i>
@@ -16,24 +12,18 @@
                     The most trusted platform connecting talented tutors with students across Bangladesh. Learn smarter, grow faster.
                 </p>
             </div>
-
-            <!-- Quick Links -->
             <div class="col-lg-2 col-md-6">
                 <h5 class="text-white mb-3 fw-bold">Platform</h5>
                 <ul class="list-unstyled small space-y-2">
                     <li class="mb-2"><a href="/pages/index.php">Home</a></li>
                 </ul>
             </div>
-
-            <!-- Support -->
             <div class="col-lg-2 col-md-6">
                 <h5 class="text-white mb-3 fw-bold">Support</h5>
                 <ul class="list-unstyled small space-y-2">
                     <li class="mb-2">support@smarttutor.com</li>
                 </ul>
             </div>
-
-            <!-- Contact -->
             <div class="col-lg-4 col-md-6">
                 <h5 class="text-white mb-3 fw-bold">Contact Us</h5>
                 <ul class="list-unstyled small space-y-2 mb-3">
@@ -49,9 +39,7 @@
                 </div>
             </div>
         </div>
-
         <hr class="mt-5 mb-4 border-secondary">
-        
         <div class="text-center small" style="color: var(--p-300);">
             &copy; <?= date('Y') ?> SmartTutor. All rights reserved. Designed for Database Systems Lab.
         </div>
@@ -60,11 +48,7 @@
         </div>
     </div>
 </footer>
-
-<!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Custom JS -->
 <script src="../assets/js/main.js"></script>
 </body>
 </html>
-

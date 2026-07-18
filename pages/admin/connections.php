@@ -1,25 +1,19 @@
 <?php
 require_once '../../includes/auth.php';
 requireAdminAuth();
-
 $db = Database::getInstance();
-
 $search = trim($_GET['search'] ?? '');
 $districtFilter = trim($_GET['district'] ?? '');
-
 $whereClause = "p.status IN ('assigned', 'closed')";
 $params = [];
-
 if ($search !== '') {
     $whereClause .= " AND (LOWER(st.full_name) LIKE :search OR LOWER(t.full_name) LIKE :search)";
     $params['search'] = '%' . strtolower($search) . '%';
 }
-
 if ($districtFilter !== '') {
     $whereClause .= " AND l.district = :district";
     $params['district'] = $districtFilter;
 }
-
 $connections = $db->fetchAll("
     SELECT 
         p.post_id,
@@ -46,8 +40,6 @@ $connections = $db->fetchAll("
     WHERE $whereClause
     ORDER BY p.post_id DESC
 ", $params);
-
-// Fetch distinct districts for filter
 $districts = $db->fetchAll("
     SELECT DISTINCT l.district 
     FROM ST_LOCATION l
@@ -55,7 +47,6 @@ $districts = $db->fetchAll("
     WHERE p.status IN ('assigned', 'closed')
     ORDER BY l.district
 ");
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,17 +59,12 @@ $districts = $db->fetchAll("
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/admin-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/admin-navbar.php'; ?>
-
         <div class="dashboard-content">
             <h3 class="fw-bold mb-4">Successful Connections</h3>
-
-            <!-- Search and Filter Form -->
             <form method="GET" action="connections.php" class="card card-custom p-3 mb-4">
                 <div class="row g-3">
                     <div class="col-md-5">
@@ -102,7 +88,6 @@ $districts = $db->fetchAll("
                     </div>
                 </div>
             </form>
-
             <div class="card card-custom p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
@@ -163,7 +148,6 @@ $districts = $db->fetchAll("
         </div>
     </main>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>

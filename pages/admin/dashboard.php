@@ -1,16 +1,11 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('admin');
-
 $db = Database::getInstance();
-
-// Metrics
 $totalStudents = $db->fetchOne("SELECT COUNT(*) as count FROM ST_USER WHERE role = 'student'")['count'];
 $totalTutors = $db->fetchOne("SELECT COUNT(*) as count FROM ST_USER WHERE role = 'tutor'")['count'];
 $activePosts = $db->fetchOne("SELECT COUNT(*) as count FROM ST_TUITION_POST WHERE status = 'open'")['count'];
 $totalApplications = $db->fetchOne("SELECT COUNT(*) as count FROM ST_APPLICATION")['count'];
-
-// Recent Registrations (Last 5)
 $recentUsers = $db->fetchAll("
     SELECT * FROM (
         SELECT user_id, email, role, is_active, TO_CHAR(created_at, 'DD Mon, YYYY') as created_dt 
@@ -19,8 +14,6 @@ $recentUsers = $db->fetchAll("
         ORDER BY created_at DESC 
     ) WHERE ROWNUM <= 5
 ");
-
-// Recent Posts (Last 5)
 $recentPosts = $db->fetchAll("
     SELECT * FROM (
         SELECT p.post_id, p.class_level, p.status, s.subject_name, TO_CHAR(p.created_at, 'DD Mon, YYYY') as created_dt
@@ -29,10 +22,6 @@ $recentPosts = $db->fetchAll("
         ORDER BY p.created_at DESC
     ) WHERE ROWNUM <= 5
 ");
-
-/**
- * SmartTutor - Admin Dashboard Overview
- */
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,12 +39,9 @@ $recentPosts = $db->fetchAll("
     <main class="dashboard-main">
         <?php include '../../includes/admin-navbar.php'; ?>
         <div class="dashboard-content">
-
             <div class="page-header">
                 <h3>Platform Overview</h3>
             </div>
-
-            <!-- Stat Cards -->
             <div class="row g-4 mb-4">
                 <div class="col-sm-6 col-xl-3">
                     <div class="stat-card">
@@ -106,8 +92,6 @@ $recentPosts = $db->fetchAll("
                     </div>
                 </div>
             </div>
-
-            <!-- Recent Registrations & Posts -->
             <div class="row g-4">
                 <div class="col-lg-6">
                     <div class="card-custom p-0 h-100">
@@ -152,7 +136,6 @@ $recentPosts = $db->fetchAll("
                         </div>
                     </div>
                 </div>
-                
                 <div class="col-lg-6">
                     <div class="card-custom p-0 h-100">
                         <div class="d-flex justify-content-between align-items-center p-4" style="border-bottom:1px solid var(--border-subtle);">
@@ -193,7 +176,6 @@ $recentPosts = $db->fetchAll("
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
 </div>

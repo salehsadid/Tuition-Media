@@ -13,17 +13,13 @@ session_set_cookie_params([
 ]);
 session_start();
 require_once '../config/database.php';
-
 $error = '';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
-
     if (!empty($email) && !empty($password)) {
         $db = Database::getInstance();
         $user = $db->fetchOne("SELECT * FROM ST_USER WHERE email = :email AND is_active = 1", ['email' => $email]);
-
         if ($user && password_verify($password, $user['password_hash'])) {
             if ($user['role'] !== 'admin') {
                 $error = "Access Denied: This page is for administrators only.";
@@ -63,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100 align-items-center justify-content-center">
-
 <div class="admin-card shadow-lg p-4">
     <div class="text-center mb-4">
         <div class="mb-3 d-inline-flex align-items-center justify-content-center rounded-circle"
@@ -73,11 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h4 class="fw-bold mb-1">Admin Portal</h4>
         <p class="text-muted small mb-0">Restricted access — administrators only.</p>
     </div>
-
     <?php if ($error): ?>
         <div class="alert alert-danger py-2"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
-
     <form action="admin-login.php" method="POST">
         <div class="mb-3">
             <label class="form-label fw-medium small text-muted">Administrator Email</label>
@@ -104,7 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </form>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.querySelectorAll('.toggle-password').forEach(button => {

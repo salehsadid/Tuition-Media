@@ -1,19 +1,14 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('student');
-
 $db = Database::getInstance();
 $user_id = $_SESSION['user_id'];
-
-// Mark all unread student notifications as read
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mark_read'])) {
     $db->execute("UPDATE ST_NOTIFICATION SET is_read = 1 WHERE target_role = 'student' AND user_id = :u_id AND is_read = 0", ['u_id' => $user_id]);
     $db->execute("COMMIT");
     header("Location: notifications.php");
     exit;
 }
-
-// Fetch all student notifications
 $notifications = $db->fetchAll("
     SELECT notification_id, title, message, target_role, is_read, 
            TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at 
@@ -33,22 +28,17 @@ $notifications = $db->fetchAll("
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/student-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/student-navbar.php'; ?>
-
         <div class="dashboard-content">
-            
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold mb-0">Notifications</h3>
                 <form method="POST" action="notifications.php">
                     <button type="submit" name="mark_read" class="btn btn-sm btn-outline-secondary">Mark all as read</button>
                 </form>
             </div>
-
             <div class="card card-custom shadow-sm overflow-hidden">
                 <div class="list-group list-group-flush">
                     <?php if (empty($notifications)): ?>
@@ -70,11 +60,9 @@ $notifications = $db->fetchAll("
                     <?php endif; ?>
                 </div>
             </div>
-            
         </div>
     </main>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>

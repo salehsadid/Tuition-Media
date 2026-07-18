@@ -1,25 +1,18 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('admin');
-
 $db = Database::getInstance();
 $success = '';
 $error = '';
-
-// Handle Delete User Action
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user_id'])) {
     $deleteId = (int)$_POST['delete_user_id'];
-    
-    // Prevent admin from deleting themselves
     if ($deleteId === (int)$_SESSION['user_id']) {
         $error = "You cannot delete your own admin account.";
     } else {
         try {
-            // First find role to delete profile
             $u = $db->fetchOne("SELECT role FROM ST_USER WHERE user_id = :u_id", ['u_id' => $deleteId]);
             if ($u) {
                 if ($u['role'] === 'student') {
-                    // Delete student dependencies first
                     $db->execute("DELETE FROM ST_APPLICATION WHERE post_id IN (SELECT post_id FROM ST_TUITION_POST WHERE student_id IN (SELECT student_id FROM ST_STUDENT WHERE user_id = :u_id))", ['u_id' => $deleteId]);
                     $db->execute("DELETE FROM ST_TUITION_POST WHERE student_id IN (SELECT student_id FROM ST_STUDENT WHERE user_id = :u_id)", ['u_id' => $deleteId]);
                     $db->execute("DELETE FROM ST_STUDENT WHERE user_id = :u_id", ['u_id' => $deleteId]);
@@ -27,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user_id'])) {
                     $db->execute("DELETE FROM ST_APPLICATION WHERE tutor_id IN (SELECT tutor_id FROM ST_TUTOR WHERE user_id = :u_id)", ['u_id' => $deleteId]);
                     $db->execute("DELETE FROM ST_TUTOR WHERE user_id = :u_id", ['u_id' => $deleteId]);
                 }
-                
                 $db->execute("DELETE FROM ST_USER WHERE user_id = :u_id", ['u_id' => $deleteId]);
                 $db->execute("COMMIT");
                 $success = "User account completely deleted.";
@@ -37,24 +29,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user_id'])) {
         }
     }
 }
-
 $search = trim($_GET['search'] ?? '');
 $roleFilter = trim($_GET['role'] ?? '');
-
 $whereClause = "1=1";
 $params = [];
-
 if ($search !== '') {
     $whereClause .= " AND (LOWER(COALESCE(s.full_name, t.full_name, a.full_name)) LIKE :search OR LOWER(u.email) LIKE :search)";
     $params['search'] = '%' . strtolower($search) . '%';
 }
-
 if ($roleFilter !== '') {
     $whereClause .= " AND u.role = :role";
     $params['role'] = $roleFilter;
 }
-
-// Fetch all users except current admin
 $users = $db->fetchAll("
     SELECT 
         u.user_id, 
@@ -88,12 +74,9 @@ $users = $db->fetchAll("
     <main class="dashboard-main">
         <?php include '../../includes/admin-navbar.php'; ?>
         <div class="dashboard-content">
-
             <div class="page-header d-flex justify-content-between align-items-center mb-4">
                 <h3>Manage Users</h3>
             </div>
-            
-            <!-- Search and Filter Form -->
             <form method="GET" action="manage-users.php" class="card card-custom p-3 mb-4">
                 <div class="row g-3">
                     <div class="col-md-5">
@@ -115,10 +98,8 @@ $users = $db->fetchAll("
                     </div>
                 </div>
             </form>
-            
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-
             <div class="card-custom p-0">
                 <div class="table-responsive">
                     <table class="table align-middle mb-0" style="font-size:0.875rem;">
@@ -172,7 +153,6 @@ $users = $db->fetchAll("
                     </table>
                 </div>
             </div>
-
         </div>
     </main>
 </div>

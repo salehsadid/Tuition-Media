@@ -22,7 +22,6 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
                     <i class="bi bi-grid-1x2"></i> Dashboard
                 </a>
             </li>
-
             <span class="sidebar-section-label">Job Management</span>
             <li>
                 <a href="browse-tuition.php" class="sidebar-link <?= ($current_page=='browse-tuition.php'||$current_page=='tuition-details.php') ? 'active' : '' ?>">
@@ -34,8 +33,6 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
                     <i class="bi bi-briefcase"></i> Applied Jobs
                 </a>
             </li>
-
-
             <span class="sidebar-section-label">Communication</span>
             <li>
                 <a href="notifications.php" class="sidebar-link <?= $current_page=='notifications.php' ? 'active' : '' ?>">
@@ -45,14 +42,12 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
                     <?php endif; ?>
                 </a>
             </li>
-
             <span class="sidebar-section-label">Account</span>
             <li>
                 <a href="profile.php" class="sidebar-link <?= $current_page=='profile.php' ? 'active' : '' ?>">
                     <i class="bi bi-person-circle"></i> Profile
                 </a>
             </li>
-
             <li style="margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid rgba(255,255,255,0.07);">
                 <a href="../logout.php" class="sidebar-link" style="color:rgba(248,113,113,0.8);">
                    Logout
@@ -61,4 +56,3 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
         </ul>
     </div>
 </div>
-

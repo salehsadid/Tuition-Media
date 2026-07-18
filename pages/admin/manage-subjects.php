@@ -1,15 +1,11 @@
 <?php
 require_once '../../includes/auth.php';
 requireAdminAuth();
-
 $db = Database::getInstance();
 $success = '';
 $error = '';
-
-// Handle Add/Edit/Delete
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
-    
     try {
         if ($action === 'add') {
             $subject = trim($_POST['subject_name']);
@@ -50,10 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-
-// Fetch all subjects
 $subjects = $db->fetchAll("SELECT * FROM ST_SUBJECT ORDER BY subject_name");
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,13 +59,10 @@ $subjects = $db->fetchAll("SELECT * FROM ST_SUBJECT ORDER BY subject_name");
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/admin-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/admin-navbar.php'; ?>
-
         <div class="dashboard-content">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold mb-0">Manage Subjects</h3>
@@ -80,10 +70,8 @@ $subjects = $db->fetchAll("SELECT * FROM ST_SUBJECT ORDER BY subject_name");
                     Add Subject
                 </button>
             </div>
-
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-
             <div class="card card-custom p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
@@ -110,8 +98,6 @@ $subjects = $db->fetchAll("SELECT * FROM ST_SUBJECT ORDER BY subject_name");
                                         </form>
                                     </td>
                                 </tr>
-
-                                <!-- Edit Modal for this row -->
                                 <div class="modal fade" id="editSubjectModal<?= $sub['subject_id'] ?>" tabindex="-1">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -144,8 +130,6 @@ $subjects = $db->fetchAll("SELECT * FROM ST_SUBJECT ORDER BY subject_name");
         </div>
     </main>
 </div>
-
-<!-- Add Subject Modal -->
 <div class="modal fade" id="addSubjectModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -169,7 +153,6 @@ $subjects = $db->fetchAll("SELECT * FROM ST_SUBJECT ORDER BY subject_name");
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>

@@ -1,17 +1,13 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('tutor');
-
-
 $db = Database::getInstance();
 $userId = $_SESSION['user_id'];
-
 $tutor = $db->fetchOne("
     SELECT u.email, t.* 
     FROM ST_USER u 
     JOIN ST_TUTOR t ON u.user_id = t.user_id 
     WHERE u.user_id = :u_id", ['u_id' => $userId]);
-
 $nameParts = explode(' ', $tutor['full_name']);
 $initials = strtoupper(substr($nameParts[0], 0, 1) . (isset($nameParts[1]) ? substr($nameParts[1], 0, 1) : ''));
 ?>
@@ -26,31 +22,22 @@ $initials = strtoupper(substr($nameParts[0], 0, 1) . (isset($nameParts[1]) ? sub
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/tutor-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/tutor-navbar.php'; ?>
-
         <div class="dashboard-content">
-            
             <div class="row">
                 <div class="col-lg-8 mx-auto">
-                    
                     <div class="card card-custom overflow-hidden mb-4">
                         <div class="bg-primary bg-opacity-25" style="height: 150px;"></div>
-                        
                         <div class="card-body px-4 px-md-5 pb-5 position-relative">
-                            <!-- Avatar -->
                             <div class="rounded-circle border border-4 border-white shadow-sm position-absolute d-flex align-items-center justify-content-center bg-primary text-white fs-1 fw-bold" style="top: -64px; left: 2rem; width: 128px; height: 128px;">
                                 <?= $initials ?>
                             </div>
-                            
                             <div class="d-flex justify-content-end mb-4">
                                 <a href="settings.php" class="btn btn-outline-primary btn-sm fw-bold"><i class="bi bi-pencil me-1"></i>Edit Profile</a>
                             </div>
-
                             <div class="d-flex align-items-center mt-2 mb-1">
                                 <h3 class="fw-bold mb-0 me-2"><?= htmlspecialchars($tutor['full_name']) ?></h3>
                                 <?php if ($tutor['is_verified']): ?>
@@ -58,16 +45,12 @@ $initials = strtoupper(substr($nameParts[0], 0, 1) . (isset($nameParts[1]) ? sub
                                 <?php endif; ?>
                             </div>
                             <p class="text-muted mb-3"><i class="bi bi-mortarboard-fill me-2"></i><?= htmlspecialchars($tutor['department'] ?? 'Department') ?> at <?= htmlspecialchars($tutor['university'] ?? 'University') ?></p>
-                            
                             <div class="d-flex gap-3 mb-4">
                                 <span class="badge bg-warning text-dark px-3 py-2 fs-6"><i class="bi bi-star-fill me-1"></i> New Tutor</span>
                                 <span class="badge bg-light text-dark border px-3 py-2 fs-6"><?= (int)$tutor['experience_years'] ?> Years Experience</span>
                             </div>
-
                             <hr class="border-secondary border-opacity-25 mb-4">
-
                             <h5 class="fw-bold mb-4">Professional Information</h5>
-                            
                             <div class="row g-4 mb-4">
                                 <div class="col-md-6">
                                     <div class="small text-muted fw-bold text-uppercase mb-1">Current CGPA</div>
@@ -82,11 +65,8 @@ $initials = strtoupper(substr($nameParts[0], 0, 1) . (isset($nameParts[1]) ? sub
                                     <div class="fw-medium"><?= htmlspecialchars($tutor['preferred_areas'] ?? 'Not specified') ?></div>
                                 </div>
                             </div>
-
                             <hr class="border-secondary border-opacity-25 mb-4">
-
                             <h5 class="fw-bold mb-4">Contact Information</h5>
-                            
                             <div class="row g-4">
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center">
@@ -107,21 +87,14 @@ $initials = strtoupper(substr($nameParts[0], 0, 1) . (isset($nameParts[1]) ? sub
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
             </div>
-            
         </div>
     </main>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>
 </html>
-
-
-

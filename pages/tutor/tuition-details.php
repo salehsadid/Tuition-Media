@@ -1,36 +1,27 @@
 <?php
 require_once '../../includes/auth.php';
 requireAuth('tutor');
-
 $db = Database::getInstance();
-$tutor_id = $_SESSION['user_id']; // This is actually the user_id. We need to get tutor_id from ST_TUTOR.
-
-// Get real tutor_id
+$tutor_id = $_SESSION['user_id']; 
 $tutorRow = $db->fetchOne("SELECT tutor_id, is_verified FROM ST_TUTOR WHERE user_id = :u_id", ['u_id' => $tutor_id]);
 if (!$tutorRow) {
     die("Tutor profile not found.");
 }
 $real_tutor_id = $tutorRow['tutor_id'];
 $is_verified = $tutorRow['is_verified'];
-
 $post_id = $_GET['id'] ?? null;
 if (!$post_id) {
     header("Location: browse-tuition.php");
     exit;
 }
-
 $error = '';
 $success = '';
-
-// Handle Application Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['apply_job'])) {
     try {
-        // Check if already applied
         $existing = $db->fetchOne("SELECT application_id FROM ST_APPLICATION WHERE post_id = :pid AND tutor_id = :tid", [
             'pid' => $post_id,
             'tid' => $real_tutor_id
         ]);
-        
         if ($existing) {
             $error = "You have already applied for this job.";
         } else {
@@ -45,8 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['apply_job'])) {
         $error = "An error occurred while applying. Please try again.";
     }
 }
-
-// Fetch Post Details
 $post = $db->fetchOne("
     SELECT 
         p.post_id,
@@ -66,12 +55,9 @@ $post = $db->fetchOne("
     JOIN ST_STUDENT st ON p.student_id = st.student_id
     WHERE p.post_id = :pid
 ", ['pid' => $post_id]);
-
 if (!$post) {
     die("Post not found.");
 }
-
-// Check if currently applied
 $hasApplied = false;
 $applicationStatus = '';
 $appRow = $db->fetchOne("SELECT status FROM ST_APPLICATION WHERE post_id = :pid AND tutor_id = :tid", [
@@ -82,7 +68,6 @@ if ($appRow) {
     $hasApplied = true;
     $applicationStatus = $appRow['status'];
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -95,26 +80,21 @@ if ($appRow) {
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/tutor-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/tutor-navbar.php'; ?>
-
         <div class="dashboard-content">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold mb-0">Tuition Details</h3>
                 <a href="browse-tuition.php" class="btn btn-outline-secondary btn-sm">Back to Browse</a>
             </div>
-
             <?php if ($error): ?>
                 <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
             <?php if ($success): ?>
                 <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
             <?php endif; ?>
-
             <div class="row g-4">
                 <div class="col-lg-8">
                     <div class="card card-custom p-4 h-100">
@@ -128,9 +108,7 @@ if ($appRow) {
                             </div>
                             <h4 class="fw-bold text-success mb-0"><?= htmlspecialchars($post['monthly_salary']) ?>৳<small class="text-muted fw-normal fs-6">/mo</small></h4>
                         </div>
-                        
                         <hr class="text-muted mb-4">
-
                         <div class="row mb-4">
                             <div class="col-md-6 mb-3 mb-md-0">
                                 <p class="text-muted small mb-1">Location</p>
@@ -141,7 +119,6 @@ if ($appRow) {
                                 <p class="fw-medium mb-0"><i class="bi bi-calendar3 text-primary me-2"></i><?= (int)$post['days_per_week'] ?> Days / Week</p>
                             </div>
                         </div>
-                        
                         <div class="row mb-4">
                             <div class="col-md-6 mb-3 mb-md-0">
                                 <p class="text-muted small mb-1">Posted By</p>
@@ -152,7 +129,6 @@ if ($appRow) {
                                 <p class="fw-medium mb-0"><i class="bi bi-clock-fill text-warning me-2"></i><?= date('d M Y, h:i A', strtotime($post['created_at'])) ?></p>
                             </div>
                         </div>
-
                         <?php if (!empty($post['additional_info'])): ?>
                             <div class="mb-4">
                                 <h6 class="fw-bold">Additional Information</h6>
@@ -161,11 +137,9 @@ if ($appRow) {
                         <?php endif; ?>
                     </div>
                 </div>
-
                 <div class="col-lg-4">
                     <div class="card card-custom p-4 h-100">
                         <h5 class="fw-bold mb-4">Application Status</h5>
-                        
                         <?php if ($hasApplied): ?>
                             <div class="text-center py-4">
                                 <?php if ($applicationStatus === 'accepted'): ?>
@@ -201,7 +175,6 @@ if ($appRow) {
         </div>
     </main>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>

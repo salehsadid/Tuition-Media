@@ -27,14 +27,12 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
                     <i class="bi bi-link-45deg"></i> Successful Connections
                 </a>
             </li>
-
             <span class="sidebar-section-label">User Management</span>
             <li>
                 <a href="manage-users.php" class="sidebar-link <?= $current_page=='manage-users.php' ? 'active' : '' ?>">
                     <i class="bi bi-people"></i> Manage Users
                 </a>
             </li>
-
             <span class="sidebar-section-label">Content</span>
             <li>
                 <a href="manage-posts.php" class="sidebar-link <?= $current_page=='manage-posts.php' ? 'active' : '' ?>">
@@ -51,7 +49,6 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
                     <i class="bi bi-book"></i> Manage Subjects
                 </a>
             </li>
-
             <span class="sidebar-section-label">System</span>
             <li>
                 <a href="contact-directory.php" class="sidebar-link <?= $current_page=='contact-directory.php' ? 'active' : '' ?>">
@@ -71,14 +68,12 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
                     <?php endif; ?>
                 </a>
             </li>
-
             <span class="sidebar-section-label">Account</span>
             <li>
                 <a href="profile.php" class="sidebar-link <?= $current_page=='profile.php' ? 'active' : '' ?>">
                     <i class="bi bi-person-circle"></i> Profile
                 </a>
             </li>
-
             <li style="margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid rgba(255,255,255,0.07);">
                 <a href="../logout.php" class="sidebar-link" style="color:rgba(248,113,113,0.8);">
                    Logout

@@ -1,17 +1,13 @@
 <?php
 require_once '../../includes/auth.php';
 requireAdminAuth();
-
 $db = Database::getInstance();
-
-// Mark all unread admin notifications as read
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mark_read'])) {
     $db->execute("UPDATE ST_NOTIFICATION SET is_read = 1 WHERE target_role = 'admin' AND is_read = 0");
     $db->execute("COMMIT");
     header("Location: notifications.php");
     exit;
 }
-
 $notifications = $db->fetchAll("
     SELECT notification_id, title, message, target_role, is_read, 
            TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at 
@@ -31,22 +27,17 @@ $notifications = $db->fetchAll("
     <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
-
 <div class="dashboard-wrapper">
     <?php include '../../includes/admin-sidebar.php'; ?>
-
     <main class="dashboard-main">
         <?php include '../../includes/admin-navbar.php'; ?>
-
         <div class="dashboard-content">
-            
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold mb-0">System Alerts</h3>
                 <form method="POST" action="notifications.php">
                     <button type="submit" name="mark_read" class="btn btn-sm btn-outline-secondary">Mark all as read</button>
                 </form>
             </div>
-
             <div class="card card-custom shadow-sm overflow-hidden">
                 <div class="list-group list-group-flush">
                     <?php if (empty($notifications)): ?>
@@ -68,11 +59,9 @@ $notifications = $db->fetchAll("
                     <?php endif; ?>
                 </div>
             </div>
-            
         </div>
     </main>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
 </body>
