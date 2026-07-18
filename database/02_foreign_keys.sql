@@ -43,25 +43,11 @@ ALTER TABLE ST_APPLICATION
     REFERENCES ST_TUTOR (tutor_id)
     ON DELETE CASCADE;
 
-ALTER TABLE ST_TUITION_ASSIGNMENT
-    ADD CONSTRAINT fk_assignment_application
-    FOREIGN KEY (application_id)
-    REFERENCES ST_APPLICATION (application_id);
-
-ALTER TABLE ST_TUITION_ASSIGNMENT
-    ADD CONSTRAINT fk_assignment_post
-    FOREIGN KEY (post_id)
-    REFERENCES ST_TUITION_POST (post_id);
-
-ALTER TABLE ST_TUITION_ASSIGNMENT
-    ADD CONSTRAINT fk_assignment_tutor
-    FOREIGN KEY (tutor_id)
-    REFERENCES ST_TUTOR (tutor_id);
-
-ALTER TABLE ST_TUITION_ASSIGNMENT
-    ADD CONSTRAINT fk_assignment_student
-    FOREIGN KEY (student_id)
-    REFERENCES ST_STUDENT (student_id);
+ALTER TABLE ST_TUITION_POST
+    ADD CONSTRAINT fk_post_hired_tutor
+    FOREIGN KEY (hired_tutor_id)
+    REFERENCES ST_TUTOR (tutor_id)
+    ON DELETE SET NULL;
 
 ALTER TABLE ST_NOTIFICATION
     ADD CONSTRAINT fk_notification_user
