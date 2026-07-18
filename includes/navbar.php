@@ -22,18 +22,7 @@
                 <li class="nav-item mx-2">
                     <a class="nav-link active" aria-current="page" href="/pages/index.php">Home</a>
                 </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" href="/pages/coming-soon.php">Find Tutors</a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" href="/pages/coming-soon.php">Find Tuition</a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" href="/pages/coming-soon.php">About</a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" href="/pages/contact.php">Contact</a>
-                </li>
+
             </ul>
 
             <!-- Auth Buttons -->

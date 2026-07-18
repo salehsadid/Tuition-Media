@@ -36,11 +36,7 @@
                     <i class="bi bi-file-earmark-person"></i> Applications
                 </a>
             </li>
-            <li>
-                <a href="assigned-tutors.php" class="sidebar-link <?= $current_page=='assigned-tutors.php' ? 'active' : '' ?>">
-                    <i class="bi bi-person-check"></i> Assigned Tutors
-                </a>
-            </li>
+
 
             <span class="sidebar-section-label">Communication</span>
             <li>
@@ -56,11 +52,7 @@
                     <i class="bi bi-person-circle"></i> Profile
                 </a>
             </li>
-            <li>
-                <a href="settings.php" class="sidebar-link <?= $current_page=='settings.php' ? 'active' : '' ?>">
-                    <i class="bi bi-gear"></i> Settings
-                </a>
-            </li>
+
             <li style="margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid rgba(255,255,255,0.07);">
                 <a href="/pages/index.php" class="sidebar-link" style="color:rgba(248,113,113,0.8);">
                     <i class="bi bi-box-arrow-right"></i> Logout

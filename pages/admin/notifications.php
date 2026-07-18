@@ -1,6 +1,6 @@
 <?php
 /**
- * SmartTutor - Admin Notifications
+ * SmartTutor - Notifications (Student)
  */
 ?>
 <!DOCTYPE html>
@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications | SmartTutor Admin</title>
+    <title>Notifications | SmartTutor</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
@@ -22,73 +22,45 @@
         <?php include '../../includes/admin-navbar.php'; ?>
 
         <div class="dashboard-content">
-
+            
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="fw-bold mb-0">System Notifications</h3>
+                <h3 class="fw-bold mb-0">Notifications</h3>
                 <button class="btn btn-sm btn-outline-secondary">Mark all as read</button>
             </div>
 
-            <div class="card card-custom overflow-hidden">
+            <div class="card card-custom shadow-sm overflow-hidden">
                 <div class="list-group list-group-flush">
-
-                    <!-- Unread -->
-                    <a href="manage-users.php" class="list-group-item list-group-item-action p-4 border-bottom" style="background-color: #f8fafc;">
+                    
+                    <!-- Unread Notification -->
+                    <a href="applications.php" class="list-group-item list-group-item-action p-4 bg-primary bg-opacity-10 border-bottom">
                         <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-                            <h6 class="mb-0 fw-bold" style="color: var(--primary-color);">
-                                <i class="bi bi-person-plus-fill me-2"></i>New Tutor Registration
-                            </h6>
-                            <small class="fw-semibold" style="color: var(--primary-color);">15 mins ago</small>
+                            <h6 class="mb-1 fw-bold text-primary-custom"><i class="bi bi-person-plus-fill me-2"></i>New Application Received</h6>
+                            <small class="text-primary-custom fw-bold">10 mins ago</small>
                         </div>
-                        <p class="mb-0 text-dark small mt-1">Rakib Hasan has registered as a Tutor and is awaiting identity verification.</p>
+                        <p class="mb-1 text-dark small">Rakib Hasan applied for your post "Mathematics for Class 10".</p>
                     </a>
 
-                    <!-- Unread -->
-                    <a href="manage-posts.php" class="list-group-item list-group-item-action p-4 border-bottom" style="background-color: #f8fafc;">
+                    <!-- Read Notification -->
+                    <a href="assigned-tuition.php" class="list-group-item list-group-item-action p-4 border-bottom">
                         <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-                            <h6 class="mb-0 fw-bold" style="color: var(--primary-color);">
-                                <i class="bi bi-card-list me-2"></i>New Tuition Post Published
-                            </h6>
-                            <small class="fw-semibold" style="color: var(--primary-color);">1 hour ago</small>
-                        </div>
-                        <p class="mb-0 text-dark small mt-1">John Doe published a new tuition post: "Mathematics - Class 10, Dhanmondi".</p>
-                    </a>
-
-                    <!-- Read -->
-                    <a href="manage-users.php" class="list-group-item list-group-item-action p-4 border-bottom">
-                        <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-                            <h6 class="mb-0 fw-bold text-secondary-custom">
-                                <i class="bi bi-person-check-fill me-2 text-success"></i>Tutor Verified
-                            </h6>
+                            <h6 class="mb-1 fw-bold text-success"><i class="bi bi-check-circle-fill me-2"></i>Tutor Assigned Successfully</h6>
                             <small class="text-muted">Yesterday</small>
                         </div>
-                        <p class="mb-0 text-muted small mt-1">Kamrul Islam's tutor profile was successfully verified by the admin.</p>
+                        <p class="mb-1 text-muted small">You have successfully accepted Kamrul Islam's application for English Spoken.</p>
                     </a>
 
-                    <!-- Read -->
-                    <a href="manage-users.php" class="list-group-item list-group-item-action p-4 border-bottom">
+                    <!-- Read Notification -->
+                    <a href="my-posts.php" class="list-group-item list-group-item-action p-4">
                         <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-                            <h6 class="mb-0 fw-bold text-secondary-custom">
-                                <i class="bi bi-slash-circle me-2 text-danger"></i>User Account Blocked
-                            </h6>
-                            <small class="text-muted">2 days ago</small>
+                            <h6 class="mb-1 fw-bold text-secondary-custom"><i class="bi bi-megaphone-fill text-warning me-2"></i>Job Posted</h6>
+                            <small class="text-muted">3 days ago</small>
                         </div>
-                        <p class="mb-0 text-muted small mt-1">The account of Nadia Rahman was blocked due to a policy violation report.</p>
-                    </a>
-
-                    <!-- Read -->
-                    <a href="manage-posts.php" class="list-group-item list-group-item-action p-4">
-                        <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-                            <h6 class="mb-0 fw-bold text-secondary-custom">
-                                <i class="bi bi-trash me-2 text-warning"></i>Post Removed
-                            </h6>
-                            <small class="text-muted">4 days ago</small>
-                        </div>
-                        <p class="mb-0 text-muted small mt-1">A tuition post for "Chemistry - O Levels, Gulshan" was removed by admin.</p>
+                        <p class="mb-1 text-muted small">Your tuition requirement "Physics Tutor for HSC" is now live and visible to tutors.</p>
                     </a>
 
                 </div>
             </div>
-
+            
         </div>
     </main>
 </div>

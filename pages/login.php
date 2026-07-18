@@ -1,7 +1,37 @@
 <?php
-/**
- * SmartTutor - Login Page
- */
+session_start();
+require_once '../config/database.php';
+
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    if (!empty($email) && !empty($password)) {
+        $db = Database::getInstance();
+        $user = $db->fetchOne("SELECT * FROM ST_USER WHERE email = :email AND is_active = 1", ['email' => $email]);
+
+        if ($user && password_verify($password, $user['password_hash'])) {
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['role'] = $user['role'];
+
+            // Redirect based on role
+            if ($user['role'] === 'admin') {
+                header("Location: /pages/admin/dashboard.php");
+            } elseif ($user['role'] === 'tutor') {
+                header("Location: /pages/tutor/dashboard.php");
+            } else {
+                header("Location: /pages/student/dashboard.php");
+            }
+            exit;
+        } else {
+            $error = 'Invalid email or password.';
+        }
+    } else {
+        $error = 'Please enter both email and password.';
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,22 +67,26 @@
         </div>
 
         <div class="auth-header">
-            <!-- Dynamic Illustration (Default Student) -->
             <img id="login-illustration" src="https://illustrations.popsy.co/blue/student-going-to-school.svg" alt="Login Illustration" class="img-fluid mb-3" style="height: 120px;">
-            <h3 id="login-title" class="fw-bold">Welcome back, Student!</h3>
+            <h3 id="login-title" class="fw-bold">Welcome back!</h3>
             <p class="text-muted small">Please enter your credentials to access your dashboard.</p>
         </div>
+        
+        <?php if ($error): ?>
+            <div class="alert alert-danger mx-4 py-2" role="alert">
+                <?= htmlspecialchars($error) ?>
+            </div>
+        <?php endif; ?>
 
         <div class="auth-body">
-            <!-- Simulated Form: Submits to index.php for Phase 1 -->
-            <form action="/pages/index.php" method="GET">
+            <form action="/pages/login.php" method="POST">
                 
                 <!-- Email Field -->
                 <div class="mb-4">
                     <label class="form-label fw-medium small text-muted">Email Address</label>
                     <div class="input-group input-group-custom">
                         <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                        <input type="email" class="form-control form-control-lg fs-6" placeholder="name@example.com" required>
+                        <input type="email" name="email" class="form-control form-control-lg fs-6" placeholder="name@example.com" required>
                     </div>
                 </div>
 
@@ -64,7 +98,7 @@
                     </div>
                     <div class="input-group input-group-custom">
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="password" id="login-password" class="form-control form-control-lg fs-6" placeholder="••••••••" required>
+                        <input type="password" name="password" id="login-password" class="form-control form-control-lg fs-6" placeholder="••••••••" required>
                         <button class="btn btn-light border toggle-password bg-white" type="button" data-target="login-password">
                             <i class="bi bi-eye text-muted"></i>
                         </button>

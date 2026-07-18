@@ -21,10 +21,7 @@
             <div class="col-lg-2 col-md-6">
                 <h5 class="text-white mb-3 fw-bold">Platform</h5>
                 <ul class="list-unstyled small space-y-2">
-                    <li class="mb-2"><a href="/pages/coming-soon.php">Browse Tutors</a></li>
-                    <li class="mb-2"><a href="/pages/coming-soon.php">Tuition Jobs</a></li>
-                    <li class="mb-2"><a href="/pages/index.php">How it Works</a></li>
-                    <li class="mb-2"><a href="/pages/coming-soon.php">Pricing</a></li>
+                    <li class="mb-2"><a href="/pages/index.php">Home</a></li>
                 </ul>
             </div>
 
@@ -32,10 +29,7 @@
             <div class="col-lg-2 col-md-6">
                 <h5 class="text-white mb-3 fw-bold">Support</h5>
                 <ul class="list-unstyled small space-y-2">
-                    <li class="mb-2"><a href="/pages/faq.php">Help Center / FAQ</a></li>
-                    <li class="mb-2"><a href="/pages/coming-soon.php">Safety Guidelines</a></li>
-                    <li class="mb-2"><a href="/pages/terms.php">Terms of Service</a></li>
-                    <li class="mb-2"><a href="/pages/privacy.php">Privacy Policy</a></li>
+                    <li class="mb-2">support@smarttutor.com</li>
                 </ul>
             </div>
 
