@@ -8,34 +8,33 @@ $db = Database::getInstance();
 $search = trim($_GET['search'] ?? '');
 $district = trim($_GET['district'] ?? '');
 
-$whereClause = "p.status = 'open'";
+$whereClause = "1=1";
 $params = [];
 
 if ($search !== '') {
-    $whereClause .= " AND (LOWER(s.subject_name) LIKE :search OR LOWER(p.class_level) LIKE :search OR LOWER(l.area_name) LIKE :search)";
+    $whereClause .= " AND (LOWER(subject_name) LIKE :search OR LOWER(class_level) LIKE :search OR LOWER(area_name) LIKE :search)";
     $params['search'] = '%' . strtolower($search) . '%';
 }
 
 if ($district !== '') {
-    $whereClause .= " AND l.district = :district";
+    $whereClause .= " AND district = :district";
     $params['district'] = $district;
 }
 
+// Fetching directly from the Oracle View instead of doing JOINS here
 $posts = $db->fetchAll("
     SELECT 
-        p.post_id,
-        p.class_level,
-        p.monthly_salary,
-        p.days_per_week,
-        TO_CHAR(p.created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at,
-        s.subject_name,
-        l.area_name,
-        l.district
-    FROM ST_TUITION_POST p
-    JOIN ST_SUBJECT s ON p.subject_id = s.subject_id
-    JOIN ST_LOCATION l ON p.location_id = l.location_id
+        post_id,
+        class_level,
+        monthly_salary,
+        days_per_week,
+        formatted_date as created_at,
+        subject_name,
+        area_name,
+        district
+    FROM V_ACTIVE_POSTS
     WHERE $whereClause
-    ORDER BY p.created_at DESC
+    ORDER BY created_at DESC
 ", $params);
 
 // Fetch distinct districts for filter

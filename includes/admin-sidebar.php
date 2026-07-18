@@ -54,6 +54,16 @@ $sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIF
 
             <span class="sidebar-section-label">System</span>
             <li>
+                <a href="contact-directory.php" class="sidebar-link <?= $current_page=='contact-directory.php' ? 'active' : '' ?>">
+                    <i class="bi bi-person-lines-fill"></i> Contact Directory
+                </a>
+            </li>
+            <li>
+                <a href="untapped-locations.php" class="sidebar-link <?= $current_page=='untapped-locations.php' ? 'active' : '' ?>">
+                    <i class="bi bi-map"></i> Untapped Locations
+                </a>
+            </li>
+            <li>
                 <a href="notifications.php" class="sidebar-link <?= $current_page=='notifications.php' ? 'active' : '' ?>">
                     <i class="bi bi-bell"></i> Notifications
                     <?php if ($sidebarUnreadCount > 0): ?>

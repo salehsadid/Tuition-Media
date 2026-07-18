@@ -27,20 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && isset($_
 
         if ($app) {
             if ($action === 'accept') {
-                // Update this application to accepted
-                $db->execute("UPDATE ST_APPLICATION SET status = 'accepted' WHERE application_id = :aid", ['aid' => $appId]);
-                // Delete all other applications for this post since the job is now filled
-                $db->execute("DELETE FROM ST_APPLICATION WHERE post_id = :pid AND application_id != :aid", [
+                // Call the Oracle PL/SQL Procedure to handle hiring safely
+                $db->execute("BEGIN PROC_HIRE_TUTOR(:pid, :tid); END;", [
                     'pid' => $app['post_id'],
-                    'aid' => $appId
-                ]);
-                // Mark the post as assigned and save the hired_tutor_id
-                $db->execute("UPDATE ST_TUITION_POST SET status = 'assigned', hired_tutor_id = :tid WHERE post_id = :pid", [
-                    'tid' => $app['tutor_id'],
-                    'pid' => $app['post_id']
+                    'tid' => $app['tutor_id']
                 ]);
                 
-                $db->execute("COMMIT");
                 $success = "Application accepted! The connection has been established.";
             } elseif ($action === 'reject') {
                 // Remove the application from the table completely
