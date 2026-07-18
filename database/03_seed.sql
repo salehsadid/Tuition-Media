@@ -13,13 +13,13 @@ INSERT INTO ST_LOCATION (area_name, district) VALUES ('Dhanmondi', 'Dhaka');
 INSERT INTO ST_LOCATION (area_name, district) VALUES ('Mirpur', 'Dhaka');
 
 -- Users (Password: Test@1234)
-INSERT INTO ST_USER (email, password_hash, role, is_active) VALUES ('admin@smarttutor.com', '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', 'admin', 1);
-INSERT INTO ST_USER (email, password_hash, role, is_active) VALUES ('john@student.com', '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', 'student', 1);
-INSERT INTO ST_USER (email, password_hash, role, is_active) VALUES ('kamrul@tutor.com', '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', 'tutor', 1);
-INSERT INTO ST_USER (email, password_hash, role, is_active) VALUES ('farhan@tutor.com', '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', 'tutor', 1);
+INSERT INTO ST_USER (email, password_hash, role, is_active) VALUES ('admin@smarttutor.com', '$2y$10$xzFoDbwex2Wvdwj1/1oHi.hG8.iFCDOgE.5JVnvIjgfMfUOp8qFN2', 'admin', 1);
+INSERT INTO ST_USER (email, password_hash, role, is_active) VALUES ('john@student.com', '$2y$10$xzFoDbwex2Wvdwj1/1oHi.hG8.iFCDOgE.5JVnvIjgfMfUOp8qFN2', 'student', 1);
+INSERT INTO ST_USER (email, password_hash, role, is_active) VALUES ('kamrul@tutor.com', '$2y$10$xzFoDbwex2Wvdwj1/1oHi.hG8.iFCDOgE.5JVnvIjgfMfUOp8qFN2', 'tutor', 1);
+INSERT INTO ST_USER (email, password_hash, role, is_active) VALUES ('farhan@tutor.com', '$2y$10$xzFoDbwex2Wvdwj1/1oHi.hG8.iFCDOgE.5JVnvIjgfMfUOp8qFN2', 'tutor', 1);
 
 INSERT INTO ST_ADMIN (user_id, full_name) VALUES (1, 'System Admin');
-INSERT INTO ST_STUDENT (user_id, full_name, phone) VALUES (2, 'John Doe', '01711111111');
+INSERT INTO ST_STUDENT (user_id, full_name, phone) VALUES (2, 'Saleh Sadid Mir', '01711111111');
 INSERT INTO ST_TUTOR (user_id, full_name, phone, expected_salary) VALUES (3, 'Kamrul Islam', '01811111111', 5000);
 INSERT INTO ST_TUTOR (user_id, full_name, phone, expected_salary) VALUES (4, 'Farhan Ahmed', '01911111111', 8000);
 

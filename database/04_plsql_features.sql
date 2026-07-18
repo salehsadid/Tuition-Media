@@ -95,6 +95,7 @@ CREATE OR REPLACE TRIGGER trg_notify_admin_on_user
 AFTER INSERT ON ST_USER
 FOR EACH ROW
 DECLARE
+    PRAGMA AUTONOMOUS_TRANSACTION;
     v_admin_user_id NUMBER;
 BEGIN
     -- Get the admin's user_id
@@ -103,9 +104,13 @@ BEGIN
     -- Insert notification for admin
     INSERT INTO ST_NOTIFICATION (user_id, title, message)
     VALUES (v_admin_user_id, 'New User Registration', 'A new user has registered with email: ' || :NEW.email);
+    
+    COMMIT;
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
-        NULL; -- Do nothing if no admin exists yet
+        ROLLBACK; -- Do nothing if no admin exists yet
+    WHEN OTHERS THEN
+        ROLLBACK;
 END;
 /
 

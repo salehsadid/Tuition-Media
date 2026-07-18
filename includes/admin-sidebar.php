@@ -1,4 +1,8 @@
-<?php $current_page = basename($_SERVER['PHP_SELF']); ?>
+<?php 
+$current_page = basename($_SERVER['PHP_SELF']); 
+$sidebarDb = Database::getInstance();
+$sidebarUnreadCount = $sidebarDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIFICATION WHERE target_role = 'admin' AND is_read = 0")['cnt'] ?? 0;
+?>
 <div class="offcanvas-lg offcanvas-start dashboard-sidebar" tabindex="-1" id="sidebarMenu">
     <div class="sidebar-header">
         <a href="/pages/index.php" class="d-flex align-items-center text-decoration-none gap-2">
@@ -16,6 +20,11 @@
             <li>
                 <a href="dashboard.php" class="sidebar-link <?= $current_page=='dashboard.php' ? 'active' : '' ?>">
                     <i class="bi bi-grid-1x2"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="connections.php" class="sidebar-link <?= $current_page=='connections.php' ? 'active' : '' ?>">
+                    <i class="bi bi-link-45deg"></i> Successful Connections
                 </a>
             </li>
 
@@ -47,7 +56,9 @@
             <li>
                 <a href="notifications.php" class="sidebar-link <?= $current_page=='notifications.php' ? 'active' : '' ?>">
                     <i class="bi bi-bell"></i> Notifications
-                    <span class="badge bg-danger ms-auto">3</span>
+                    <?php if ($sidebarUnreadCount > 0): ?>
+                        <span class="p-1 bg-danger border border-light rounded-circle ms-auto"></span>
+                    <?php endif; ?>
                 </a>
             </li>
 

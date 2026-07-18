@@ -30,12 +30,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_post_id'])) {
 // Fetch posts
 $posts = [];
 if ($studentId) {
+    $search = trim($_GET['search'] ?? '');
+    $statusFilter = trim($_GET['status'] ?? '');
+
+    $whereClause = "p.student_id = :sid";
+    $params = ['sid' => $studentId];
+
+    if ($search !== '') {
+        $whereClause .= " AND LOWER(s.subject_name) LIKE :search";
+        $params['search'] = '%' . strtolower($search) . '%';
+    }
+
+    if ($statusFilter !== '') {
+        $whereClause .= " AND p.status = :status";
+        $params['status'] = $statusFilter;
+    }
+
     $posts = $db->fetchAll("
         SELECT 
             p.post_id,
             p.class_level,
             p.monthly_salary,
             p.status,
+            p.hired_tutor_id,
             s.subject_name,
             l.area_name,
             l.district,
@@ -43,9 +60,9 @@ if ($studentId) {
         FROM ST_TUITION_POST p
         JOIN ST_SUBJECT s ON p.subject_id = s.subject_id
         JOIN ST_LOCATION l ON p.location_id = l.location_id
-        WHERE p.student_id = :sid
+        WHERE $whereClause
         ORDER BY p.created_at DESC
-    ", ['sid' => $studentId]);
+    ", $params);
 }
 
 ?>
@@ -74,6 +91,29 @@ if ($studentId) {
                     New Post
                 </a>
             </div>
+
+            <!-- Search and Filter Form -->
+            <form method="GET" action="my-posts.php" class="card card-custom p-3 mb-4">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search by subject name..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="status" class="form-select text-muted">
+                            <option value="">All Statuses</option>
+                            <option value="open" <?= ($_GET['status'] ?? '') === 'open' ? 'selected' : '' ?>>Open</option>
+                            <option value="assigned" <?= ($_GET['status'] ?? '') === 'assigned' ? 'selected' : '' ?>>Assigned</option>
+                            <option value="closed" <?= ($_GET['status'] ?? '') === 'closed' ? 'selected' : '' ?>>Closed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-brand w-100">Filter Results</button>
+                    </div>
+                </div>
+            </form>
             
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
@@ -121,7 +161,7 @@ if ($studentId) {
                                                 <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                                             </form>
                                         <?php elseif ($post['status'] === 'assigned'): ?>
-                                            <a href="#" class="btn btn-sm btn-primary-custom me-2">Tutor</a>
+                                            <a href="tutor-profile.php?id=<?= $post['hired_tutor_id'] ?>" class="btn btn-sm btn-primary-custom me-2">Tutor</a>
                                         <?php else: ?>
                                             <button class="btn btn-sm btn-outline-secondary" disabled>View</button>
                                         <?php endif; ?>

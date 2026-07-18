@@ -1,22 +1,21 @@
 <?php
-$sidebars = [
-    'includes/student-sidebar.php',
-    'includes/tutor-sidebar.php',
-    'includes/admin-sidebar.php'
-];
-
-foreach ($sidebars as $file) {
-    if (file_exists($file)) {
-        $content = file_get_contents($file);
-        
-        $content = preg_replace(
-            "/<a href=\"\/pages\/index\.php\" class=\"sidebar-link\" style=\"color:rgba\(248,113,113,0\.8\);\">\s*Logout\s*<\/a>/",
-            "<a href=\"../logout.php\" class=\"sidebar-link\" style=\"color:rgba(248,113,113,0.8);\">\n                   Logout\n                </a>",
-            $content
-        );
-
-        file_put_contents($file, $content);
-        echo "Updated $file\n";
+function injectSessionName($filePath) {
+    if (!file_exists($filePath)) return;
+    $content = file_get_contents($filePath);
+    
+    // Check if session_name is already there
+    if (strpos($content, "session_name('SMARTTUTOR_SESSION');") === false) {
+        // Insert session_name before session_start
+        $content = str_replace("session_start();", "session_name('SMARTTUTOR_SESSION');\n    session_start();", $content);
+        file_put_contents($filePath, $content);
+        echo "Updated $filePath\n";
     }
 }
+
+injectSessionName('pages/login.php');
+injectSessionName('pages/admin-login.php');
+injectSessionName('pages/register.php');
+injectSessionName('pages/logout.php');
+injectSessionName('includes/auth.php');
+echo "Session name updated.";
 ?>

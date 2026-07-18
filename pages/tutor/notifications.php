@@ -2,21 +2,26 @@
 require_once '../../includes/auth.php';
 requireAuth('tutor');
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'tutor') {
-    header('Location: ../login.php');
+$db = Database::getInstance();
+$user_id = $_SESSION['user_id'];
+
+// Mark all unread tutor notifications as read
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mark_read'])) {
+    $db->execute("UPDATE ST_NOTIFICATION SET is_read = 1 WHERE target_role = 'tutor' AND user_id = :u_id AND is_read = 0", ['u_id' => $user_id]);
+    $db->execute("COMMIT");
+    header("Location: notifications.php");
     exit;
 }
 
-/**
- * SmartTutor - Notifications (Tutor)
- */
+// Fetch all tutor notifications
+$notifications = $db->fetchAll("SELECT * FROM ST_NOTIFICATION WHERE target_role = 'tutor' AND user_id = :u_id ORDER BY created_at DESC", ['u_id' => $user_id]);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications | SmartTutor</title>
+    <title>Notifications | Tutor Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
@@ -33,30 +38,30 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'tutor') {
             
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold mb-0">Notifications</h3>
-                <button class="btn btn-sm btn-outline-secondary">Mark all as read</button>
+                <form method="POST" action="notifications.php">
+                    <button type="submit" name="mark_read" class="btn btn-sm btn-outline-secondary">Mark all as read</button>
+                </form>
             </div>
 
             <div class="card card-custom shadow-sm overflow-hidden">
                 <div class="list-group list-group-flush">
-                    
-                    <!-- Unread Notification -->
-                    <a href="assigned-tuition.php" class="list-group-item list-group-item-action p-4 bg-primary bg-opacity-10 border-bottom">
-                        <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-                            <h6 class="mb-1 fw-bold text-success"><i class="bi bi-check-circle-fill me-2"></i>Application Accepted!</h6>
-                            <small class="text-primary-custom fw-bold">2 hours ago</small>
-                        </div>
-                        <p class="mb-1 text-dark small">Amina Begum has accepted your application for "Physics - HSC". You are now hired.</p>
-                    </a>
-
-                    <!-- Read Notification -->
-                    <a href="applied-jobs.php" class="list-group-item list-group-item-action p-4 border-bottom">
-                        <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-                            <h6 class="mb-1 fw-bold text-danger"><i class="bi bi-x-circle-fill me-2"></i>Application Rejected</h6>
-                            <small class="text-muted">3 days ago</small>
-                        </div>
-                        <p class="mb-1 text-muted small">Unfortunately, your application for "Chemistry - O Levels" was not selected.</p>
-                    </a>
-
+                    <?php if (empty($notifications)): ?>
+                        <div class="p-5 text-center text-muted">No notifications found.</div>
+                    <?php else: ?>
+                        <?php foreach ($notifications as $n): ?>
+                            <div class="list-group-item p-4 <?= $n['is_read'] == 0 ? 'bg-primary bg-opacity-10 border-bottom' : 'border-bottom' ?>">
+                                <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                                    <h6 class="mb-1 fw-bold <?= $n['is_read'] == 0 ? 'text-primary-custom' : 'text-secondary-custom' ?>">
+                                        <?= htmlspecialchars($n['title']) ?>
+                                    </h6>
+                                    <small class="<?= $n['is_read'] == 0 ? 'text-primary-custom fw-bold' : 'text-muted' ?>">
+                                        <?= date('M j, h:i A', strtotime($n['created_at'])) ?>
+                                    </small>
+                                </div>
+                                <p class="mb-1 text-dark small"><?= htmlspecialchars($n['message']) ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
             

@@ -38,6 +38,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user_id'])) {
     }
 }
 
+$search = trim($_GET['search'] ?? '');
+$roleFilter = trim($_GET['role'] ?? '');
+
+$whereClause = "1=1";
+$params = [];
+
+if ($search !== '') {
+    $whereClause .= " AND (LOWER(COALESCE(s.full_name, t.full_name, a.full_name)) LIKE :search OR LOWER(u.email) LIKE :search)";
+    $params['search'] = '%' . strtolower($search) . '%';
+}
+
+if ($roleFilter !== '') {
+    $whereClause .= " AND u.role = :role";
+    $params['role'] = $roleFilter;
+}
+
 // Fetch all users except current admin
 $users = $db->fetchAll("
     SELECT 
@@ -52,8 +68,9 @@ $users = $db->fetchAll("
     LEFT JOIN ST_STUDENT s ON u.user_id = s.user_id
     LEFT JOIN ST_TUTOR t ON u.user_id = t.user_id
     LEFT JOIN ST_ADMIN a ON u.user_id = a.user_id
+    WHERE $whereClause
     ORDER BY u.created_at DESC
-");
+", $params);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,9 +89,32 @@ $users = $db->fetchAll("
         <?php include '../../includes/admin-navbar.php'; ?>
         <div class="dashboard-content">
 
-            <div class="page-header d-flex justify-content-between align-items-center">
+            <div class="page-header d-flex justify-content-between align-items-center mb-4">
                 <h3>Manage Users</h3>
             </div>
+            
+            <!-- Search and Filter Form -->
+            <form method="GET" action="manage-users.php" class="card card-custom p-3 mb-4">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search by name or email..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="role" class="form-select text-muted">
+                            <option value="">All Roles</option>
+                            <option value="student" <?= ($_GET['role'] ?? '') === 'student' ? 'selected' : '' ?>>Student</option>
+                            <option value="tutor" <?= ($_GET['role'] ?? '') === 'tutor' ? 'selected' : '' ?>>Tutor</option>
+                            <option value="admin" <?= ($_GET['role'] ?? '') === 'admin' ? 'selected' : '' ?>>Admin</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-brand w-100">Filter Results</button>
+                    </div>
+                </div>
+            </form>
             
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>

@@ -108,21 +108,9 @@ $recentActivity = $db->fetchAll("
                 </div>
             </div>
 
-            <!-- Chart Placeholder + Activity -->
+            <!-- Activity -->
             <div class="row g-4">
-                <div class="col-lg-8">
-                    <div class="card-custom p-4 h-100">
-                        <h6 class="fw-700 mb-4" style="font-weight:700; color:var(--text-primary);">Applications Trend</h6>
-                        <div class="d-flex align-items-center justify-content-center rounded" style="height:280px; background:var(--gray-50); border:1.5px dashed var(--gray-300);">
-                            <div class="text-center">
-                                <i class="bi bi-bar-chart-line" style="font-size:2.5rem; color:var(--gray-400);"></i>
-                                <p class="mt-3 mb-0 fw-600" style="font-weight:600; color:var(--text-muted); font-size:0.875rem;">Chart.js Placeholder</p>
-                                <p class="mb-0" style="font-size:0.8125rem; color:var(--text-subtle);">Application trend graph — Phase 2</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
+                <div class="col-12">
                     <div class="card-custom p-4 h-100">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h6 style="font-weight:700; color:var(--text-primary); margin:0;">Recent Applications</h6>

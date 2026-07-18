@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
             this.classList.add('active');
 
             const selectedRole = this.getAttribute('data-role'); // 'student' or 'tutor'
+            
+            // Update hidden role input if it exists
+            const roleInput = document.getElementById('role-input');
+            if (roleInput) roleInput.value = selectedRole;
 
             // --- Register Page Logic ---
             const studentFields = document.getElementById('student-fields');

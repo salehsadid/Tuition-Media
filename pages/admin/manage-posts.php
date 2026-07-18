@@ -22,6 +22,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_post_id'])) {
     }
 }
 
+$search = trim($_GET['search'] ?? '');
+$statusFilter = trim($_GET['status'] ?? '');
+
+$whereClause = "1=1";
+$params = [];
+
+if ($search !== '') {
+    $whereClause .= " AND (LOWER(s.subject_name) LIKE :search OR LOWER(st.full_name) LIKE :search)";
+    $params['search'] = '%' . strtolower($search) . '%';
+}
+
+if ($statusFilter !== '') {
+    $whereClause .= " AND p.status = :status";
+    $params['status'] = $statusFilter;
+}
+
 // Fetch all posts
 $posts = $db->fetchAll("
     SELECT 
@@ -40,8 +56,9 @@ $posts = $db->fetchAll("
     JOIN ST_LOCATION l ON p.location_id = l.location_id
     JOIN ST_STUDENT st ON p.student_id = st.student_id
     JOIN ST_USER u ON st.user_id = u.user_id
+    WHERE $whereClause
     ORDER BY p.created_at DESC
-");
+", $params);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,9 +77,32 @@ $posts = $db->fetchAll("
         <?php include '../../includes/admin-navbar.php'; ?>
         <div class="dashboard-content">
 
-            <div class="page-header d-flex justify-content-between align-items-center">
+            <div class="page-header d-flex justify-content-between align-items-center mb-4">
                 <h3>Manage Tuition Posts</h3>
             </div>
+            
+            <!-- Search and Filter Form -->
+            <form method="GET" action="manage-posts.php" class="card card-custom p-3 mb-4">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search by subject or student..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="status" class="form-select text-muted">
+                            <option value="">All Statuses</option>
+                            <option value="open" <?= ($_GET['status'] ?? '') === 'open' ? 'selected' : '' ?>>Open</option>
+                            <option value="assigned" <?= ($_GET['status'] ?? '') === 'assigned' ? 'selected' : '' ?>>Assigned</option>
+                            <option value="closed" <?= ($_GET['status'] ?? '') === 'closed' ? 'selected' : '' ?>>Closed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-brand w-100">Filter Results</button>
+                    </div>
+                </div>
+            </form>
             
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>

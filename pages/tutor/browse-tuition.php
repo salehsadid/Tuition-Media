@@ -5,6 +5,22 @@ requireAuth('tutor');
 
 $db = Database::getInstance();
 
+$search = trim($_GET['search'] ?? '');
+$district = trim($_GET['district'] ?? '');
+
+$whereClause = "p.status = 'open'";
+$params = [];
+
+if ($search !== '') {
+    $whereClause .= " AND (LOWER(s.subject_name) LIKE :search OR LOWER(p.class_level) LIKE :search OR LOWER(l.area_name) LIKE :search)";
+    $params['search'] = '%' . strtolower($search) . '%';
+}
+
+if ($district !== '') {
+    $whereClause .= " AND l.district = :district";
+    $params['district'] = $district;
+}
+
 $posts = $db->fetchAll("
     SELECT 
         p.post_id,
@@ -18,9 +34,12 @@ $posts = $db->fetchAll("
     FROM ST_TUITION_POST p
     JOIN ST_SUBJECT s ON p.subject_id = s.subject_id
     JOIN ST_LOCATION l ON p.location_id = l.location_id
-    WHERE p.status = 'open'
+    WHERE $whereClause
     ORDER BY p.created_at DESC
-");
+", $params);
+
+// Fetch distinct districts for filter
+$districts = $db->fetchAll("SELECT DISTINCT district FROM ST_LOCATION ORDER BY district");
 
 /**
  * Helper to calculate time ago
@@ -75,6 +94,31 @@ function timeElapsedString($datetime, $full = false) {
 
         <div class="dashboard-content">
             <h3 class="fw-bold mb-4">Browse Tuition Jobs</h3>
+
+            <!-- Search and Filter Form -->
+            <form method="GET" action="browse-tuition.php" class="card card-custom p-3 mb-4">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search by subject, class, or area..." value="<?= htmlspecialchars($search) ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="district" class="form-select text-muted">
+                            <option value="">All Districts</option>
+                            <?php foreach ($districts as $d): ?>
+                                <option value="<?= htmlspecialchars($d['district']) ?>" <?= $district === $d['district'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($d['district']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-brand w-100">Filter Results</button>
+                    </div>
+                </div>
+            </form>
 
             <!-- Job Cards Grid -->
             <div class="row g-4">

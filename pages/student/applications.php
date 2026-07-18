@@ -56,6 +56,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && isset($_
     }
 }
 
+$search = trim($_GET['search'] ?? '');
+$statusFilter = trim($_GET['status'] ?? '');
+
+$whereClause = "p.student_id = :sid";
+$params = ['sid' => $studentId];
+
+if ($search !== '') {
+    $whereClause .= " AND LOWER(t.full_name) LIKE :search";
+    $params['search'] = '%' . strtolower($search) . '%';
+}
+
+if ($statusFilter !== '') {
+    $whereClause .= " AND a.status = :status";
+    $params['status'] = $statusFilter;
+}
+
 // Fetch applications
 $applications = $db->fetchAll("
     SELECT 
@@ -71,9 +87,9 @@ $applications = $db->fetchAll("
     JOIN ST_TUITION_POST p ON a.post_id = p.post_id
     JOIN ST_SUBJECT s ON p.subject_id = s.subject_id
     JOIN ST_TUTOR t ON a.tutor_id = t.tutor_id
-    WHERE p.student_id = :sid
+    WHERE $whereClause
     ORDER BY a.applied_at DESC
-", ['sid' => $studentId]);
+", $params);
 
 /**
  * SmartTutor - Applications Received (Student)
@@ -99,6 +115,29 @@ $applications = $db->fetchAll("
 
         <div class="dashboard-content">
             <h3 class="fw-bold mb-4">Application History</h3>
+
+            <!-- Search and Filter Form -->
+            <form method="GET" action="applications.php" class="card card-custom p-3 mb-4">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search by tutor name..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="status" class="form-select text-muted">
+                            <option value="">All Statuses</option>
+                            <option value="pending" <?= ($_GET['status'] ?? '') === 'pending' ? 'selected' : '' ?>>Pending</option>
+                            <option value="accepted" <?= ($_GET['status'] ?? '') === 'accepted' ? 'selected' : '' ?>>Accepted</option>
+                            <option value="rejected" <?= ($_GET['status'] ?? '') === 'rejected' ? 'selected' : '' ?>>Rejected</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-brand w-100">Filter Results</button>
+                    </div>
+                </div>
+            </form>
 
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
@@ -158,7 +197,7 @@ $applications = $db->fetchAll("
                                                 <button type="submit" class="btn btn-sm btn-danger me-1" title="Reject"><i class="bi bi-x-lg"></i></button>
                                             </form>
                                         <?php elseif ($app['app_status'] === 'accepted'): ?>
-                                            <button class="btn btn-sm btn-primary-custom">Contact Tutor</button>
+                                            <a href="tutor-profile.php?id=<?= $app['tutor_id'] ?>" class="btn btn-sm btn-primary-custom">Contact Tutor</a>
                                         <?php else: ?>
                                             <button class="btn btn-sm btn-light border" disabled>Closed</button>
                                         <?php endif; ?>

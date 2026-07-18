@@ -35,6 +35,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['withdraw_app_id'])) {
     }
 }
 
+$search = trim($_GET['search'] ?? '');
+$statusFilter = trim($_GET['status'] ?? '');
+
+$whereClause = "a.tutor_id = :tid";
+$params = ['tid' => $tutorId];
+
+if ($search !== '') {
+    $whereClause .= " AND (LOWER(s.subject_name) LIKE :search OR LOWER(st.full_name) LIKE :search)";
+    $params['search'] = '%' . strtolower($search) . '%';
+}
+
+if ($statusFilter !== '') {
+    $whereClause .= " AND a.status = :status";
+    $params['status'] = $statusFilter;
+}
+
 // Fetch applications
 $applications = $db->fetchAll("
     SELECT 
@@ -52,9 +68,9 @@ $applications = $db->fetchAll("
     JOIN ST_SUBJECT s ON p.subject_id = s.subject_id
     JOIN ST_LOCATION l ON p.location_id = l.location_id
     JOIN ST_STUDENT st ON p.student_id = st.student_id
-    WHERE a.tutor_id = :tid
+    WHERE $whereClause
     ORDER BY a.applied_at DESC
-", ['tid' => $tutorId]);
+", $params);
 
 /**
  * SmartTutor - Tutor Applied Jobs
@@ -83,6 +99,29 @@ $applications = $db->fetchAll("
                     Find Jobs
                 </a>
             </div>
+
+            <!-- Search and Filter Form -->
+            <form method="GET" action="applied-jobs.php" class="card card-custom p-3 mb-4">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search by subject or student..." value="<?= htmlspecialchars($search) ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="status" class="form-select text-muted">
+                            <option value="">All Statuses</option>
+                            <option value="pending" <?= $statusFilter === 'pending' ? 'selected' : '' ?>>Pending</option>
+                            <option value="accepted" <?= $statusFilter === 'accepted' ? 'selected' : '' ?>>Accepted</option>
+                            <option value="rejected" <?= $statusFilter === 'rejected' ? 'selected' : '' ?>>Rejected</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-brand w-100">Filter Results</button>
+                    </div>
+                </div>
+            </form>
 
             <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>

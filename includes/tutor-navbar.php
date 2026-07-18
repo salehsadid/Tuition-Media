@@ -4,6 +4,8 @@ $navDb = Database::getInstance();
 $navTutor = $navDb->fetchOne("SELECT full_name, is_verified FROM ST_TUTOR WHERE user_id = :u_id", ['u_id' => $_SESSION['user_id']]);
 $navTutorName = $navTutor ? $navTutor['full_name'] : 'Tutor';
 $navTutorVerified = $navTutor ? $navTutor['is_verified'] : 0;
+$tutorNavNotifs = $navDb->fetchAll("SELECT * FROM (SELECT title, message FROM ST_NOTIFICATION WHERE target_role = 'tutor' AND user_id = :u_id ORDER BY created_at DESC) WHERE ROWNUM <= 5", ['u_id' => $_SESSION['user_id']]);
+$tutorUnreadCount = $navDb->fetchOne("SELECT COUNT(*) as cnt FROM ST_NOTIFICATION WHERE target_role = 'tutor' AND user_id = :u_id AND is_read = 0", ['u_id' => $_SESSION['user_id']])['cnt'] ?? 0;
 ?>
 <header class="dashboard-navbar">
     <div class="d-flex align-items-center gap-3">
@@ -17,15 +19,23 @@ $navTutorVerified = $navTutor ? $navTutor['is_verified'] : 0;
         <div class="dropdown">
             <button class="btn btn-neutral btn-sm position-relative" style="width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;" type="button" data-bs-toggle="dropdown">
                 <i class="bi bi-bell" style="font-size:1rem; color:var(--text-secondary);"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.55rem;">1</span>
+                <?php if ($tutorUnreadCount > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                <?php endif; ?>
             </button>
             <ul class="dropdown-menu dropdown-menu-end" style="width:300px;">
                 <li class="px-3 pt-2 pb-1"><span style="font-size:0.75rem; font-weight:700; color:var(--text-primary); text-transform:uppercase; letter-spacing:0.06em;">Notifications</span></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="notifications.php" style="font-size:0.8125rem;">
-                    <div style="font-weight:600; color:var(--color-success);">Application Accepted</div>
-                    <div style="color:var(--text-muted); font-size:0.75rem; margin-top:1px;">You were hired for Physics HSC.</div>
-                </a></li>
+                <?php if (empty($tutorNavNotifs)): ?>
+                    <li><div class="dropdown-item text-muted text-center" style="font-size:0.8125rem;">No new notifications</div></li>
+                <?php else: ?>
+                    <?php foreach ($tutorNavNotifs as $n): ?>
+                        <li><a class="dropdown-item" href="notifications.php" style="font-size:0.8125rem; white-space: normal;">
+                            <div style="font-weight:600; color:var(--text-primary);"><?= htmlspecialchars($n['title']) ?></div>
+                            <div style="color:var(--text-muted); font-size:0.75rem; margin-top:1px; line-height: 1.3;"><?= htmlspecialchars($n['message']) ?></div>
+                        </a></li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-center" href="notifications.php" style="font-size:0.8125rem; font-weight:600; color:var(--p-500);">View all notifications</a></li>
             </ul>
